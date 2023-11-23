@@ -2,10 +2,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * JankenGame2
- * チャレンジ1: 3回勝負の追加
+ * JankenGame3
+ * チャレンジ2: あっち向いてほいの追加
  */
-public class JankenGame2 {
+public class JankenGame3 {
 
     public static void main(String[] args) {
 
@@ -18,7 +18,7 @@ public class JankenGame2 {
         int COUNT = 3;
         boolean[] isWinner = new boolean[COUNT];
 
-        System.out.printf("じゃんけん %d 回勝負\n", COUNT);
+        System.out.printf("あっちむいてほい %d 回勝負\n", COUNT);
         System.out.println("グーチョキパーを数字で入力してね");
         for(int i=0; i<janken.length; i++){
             System.out.printf("%d: %s \n", i, janken[i]);
@@ -44,12 +44,25 @@ public class JankenGame2 {
                 boolean is = isWin(janken, jankenCOM, janken[jankenAnswer]);
                 if(is){
                     System.out.println("あなたの勝ち\n");
-                    isWinner[tmpCount] = true;
+                    
+                    // チャレンジ2: あちほい
+                    boolean isHoi = achiHoi();
+                    if(isHoi){
+                        isWinner[tmpCount] = true;
+                        tmpCount++;
+                        System.out.println("あなたの勝ち\n");
+                    }
                 } else {
                     System.out.println("あなたの負け\n");
-                    isWinner[tmpCount] = false;
+
+                    // チャレンジ2: あちほい
+                    boolean isHoi = achiHoi();
+                    if(isHoi){
+                        isWinner[tmpCount] = false;
+                        tmpCount++;
+                        System.out.println("あなたの負け\n");
+                    }
                 }
-                tmpCount++;
                 if(tmpCount == 3) break;
 
                 System.out.printf("%d 戦目！", tmpCount+1);
@@ -81,5 +94,28 @@ public class JankenGame2 {
             }
         }
         return false;
+    }
+
+    private static boolean achiHoi(){
+
+        Scanner scan = new Scanner(System.in);
+        Random ran = new Random();
+
+        // ↑: 0, ↓: 1, →: 2, ←: 3
+        String[] hoi = {"↑", "↓", "→", "←"};
+        int arrCOMIndex = ran.nextInt(4);
+
+        for(int i=0; i<hoi.length; i++){
+            System.out.printf("%d: %s \n", i, hoi[i]);
+        }
+        System.out.printf("あっちむいて: ");
+        int arrAnswer = scan.nextInt();
+
+        if(arrCOMIndex == arrAnswer){
+            return true;
+        } else {
+            System.out.println("もう一度！\n");
+            return false;
+        }
     }
 }
