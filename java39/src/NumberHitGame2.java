@@ -17,9 +17,6 @@ public class NumberHitGame2 {
         // 0~999
         int setAnswer = random.nextInt(RANDOM_RARGE);
 
-        // デバックカンニング用
-        //System.out.printf("%d \n\n", setAnswer);
-
         System.out.printf("数字を当ててみてね。\n\n");
         System.out.printf("答えられるのは %d 回までだよ。\n\n", SET_COUNT);
 
