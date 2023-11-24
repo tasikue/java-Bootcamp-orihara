@@ -5,8 +5,9 @@ import java.util.Scanner;
 
 /**
  * BlackJack
+ * チャレンジ01: ブラックジャック判定
  */
-public class BlackJack<E> {
+public class BlackJack2<E> {
 
     private final String[] TRUMP_NUMBER = {
             "A","2","3","4","5","6","7"
@@ -24,7 +25,7 @@ public class BlackJack<E> {
         List<String> comCard = new ArrayList<>();
         Scanner scan = new Scanner(System.in);
 
-        BlackJack<String> app = new BlackJack<>();
+        BlackJack2<String> app = new BlackJack2<>();
 
         int playerTotal = 0;
         int comTotal = 0;
@@ -38,6 +39,17 @@ public class BlackJack<E> {
 
         playerTotal = app.getTotalPoint(playerCard);
         comTotal = app.getTotalPoint(comCard);
+
+        // チャレンジ01: ブラックジャック判定
+        if(playerTotal == BLACKJACK_NUMBER){
+            System.out.println("ブラックジャックなのであなたの勝ちです。");
+            System.exit(0);
+        }
+
+        if(comTotal == BLACKJACK_NUMBER){
+            System.out.println("ブラックジャックなのであなたの負けです。");
+            System.exit(0);
+        }
 
         System.out.println();
         System.out.printf("ディーラーの合計は %d です。\n", comTotal);
