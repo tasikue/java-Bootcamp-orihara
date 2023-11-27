@@ -6,37 +6,34 @@ import java.util.Scanner;
  */
 public class JankenGame {
 
+    private static final String[] JANKEN = {"グー", "チョキ", "パー"};
+
     public static void main(String[] args) {
 
         Random ran = new Random();
         Scanner scan = new Scanner(System.in);
 
-        String[] janken = {"グー", "チョキ", "パー"};
-
-        String jankenCOM = janken[ran.nextInt(3)];
-        
-        // カンニング
-        System.out.println(jankenCOM);
-
         System.out.println("じゃんけん勝負");
         System.out.println("グーチョキパーを数字で入力してね");
-        for(int i=0; i<janken.length; i++){
-            System.out.printf("%d: %s \n", i, janken[i]);
+        for(int i=0; i<JANKEN.length; i++){
+            System.out.printf("%d: %s \n", i, JANKEN[i]);
         }
         System.out.println();
         System.out.printf("最初はぐー、じゃんけん: ");
 
         while (true) {
+            // 乱数0~2
+            int jankenCOM = ran.nextInt(JANKEN.length);
             int jankenAnswer = scan.nextInt();
-            System.out.printf("%s(COM)と%s(Player)で…\n", jankenCOM, janken[jankenAnswer]);
+            System.out.printf("%s(COM)と%s(Player)で…\n", JANKEN[jankenCOM], JANKEN[jankenAnswer]);
 
-            if(jankenCOM.equals(janken[jankenAnswer])){
+            if(jankenCOM == jankenAnswer){
                 System.out.println("あいこだよ！");
                 System.out.println();
                 System.err.printf("あいこで: ");
             } else {
-                boolean is = isWin(janken, jankenCOM, janken[jankenAnswer]);
-                if(is){
+                boolean isWinCOMorPlayer = isWin(jankenCOM, jankenAnswer);
+                if(isWinCOMorPlayer){
                     System.out.println("あなたの勝ち");
                 } else {
                     System.out.println("あなたの負け");
@@ -44,14 +41,14 @@ public class JankenGame {
                 break;
             }
         }
-        
+        scan.close();
     }
 
-    private static boolean isWin(String[] janken, String com, String player){
+    private static boolean isWin(int com, int player){
 
-        for(int i=0; i<janken.length; i++){
-            for(int j=0; j<janken.length; j++){
-                if(com.equals(janken[i]) && player.equals(janken[j])){
+        for(int i=0; i<JANKEN.length; i++){
+            for(int j=0; j<JANKEN.length; j++){
+                if(com == i && player == j){
                     if((i - j) == 1 || (i - j) == -2){
                         // 勝ち
                         return true;
