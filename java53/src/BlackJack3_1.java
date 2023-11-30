@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * BlackJack
+ * BlackJack2
+ * チャレンジ2: 修正版
  */
 
-public class BlackJack {
+public class BlackJack3_1 {
 
     private final String[] TRUMP_NUMBER = {
             "A","2","3","4","5","6","7"
@@ -21,67 +22,110 @@ public class BlackJack {
         DEALER
     }
 
+    private int coin = 100;
+    private final int BET_COIN_TEN = 10;
+    private final int BET_COIN_TWENTY = 20;
+    private final int BET_COIN_THIRTY = 30;
+
+    private static Scanner scan;
+
     public static void main(String[] args) {
 
+        BlackJack3_1 app = new BlackJack3_1();  
+        scan = new Scanner(System.in);
+
+        boolean hasCoin;
+        if(app.coin == 0){
+            hasCoin = false;
+        } else {
+            hasCoin = true;
+        }
+
+        while(hasCoin){
+            app.blackjackGame();
+            System.out.println();
+            System.out.printf("現在のコインは %d \n", app.coin);
+            System.out.println();
+        }
+
+        scan.close();
+    }
+
+    private void blackjackGame(){
         final int COM_MAX = 17;
 
         List<String> playerCard = new ArrayList<>();
         List<String> comCard = new ArrayList<>();
-        Scanner scan = new Scanner(System.in);
-
-        BlackJack app = new BlackJack();
 
         int playerTotal = 0;
         int comTotal = 0;
 
         boolean isEnd = false;
 
+        coin = coin - BET_COIN_TEN;
         int count=0;
         while(count < 2){
-            app.handOutCard(playerCard, Character.PLAYER);
-            app.handOutCard(comCard, Character.DEALER);
+            handOutCard(playerCard, Character.PLAYER);
+            handOutCard(comCard, Character.DEALER);
             count++;
         }
 
-        playerTotal = app.getTotalPoint(playerCard);
-        comTotal = app.getTotalPoint(comCard);
+        playerTotal = getTotalPoint(playerCard);
+        comTotal = getTotalPoint(comCard);
 
-        System.out.println();
-        System.out.printf("ディーラーの合計は %d です。\n", comTotal);
+        // チャレンジ01: ブラックジャック判定
+        if(playerTotal == BLACKJACK_NUMBER){
+            System.out.println();
+            System.out.printf("現在の合計は %d です。\n", playerTotal);
+            System.out.println("ブラックジャックなのであなたの勝ちです。");
+            coin = coin + BET_COIN_THIRTY;
+            isEnd = true;
+        }
+
+        if(comTotal == BLACKJACK_NUMBER){
+            System.out.println();
+            System.out.printf("ディーラーの合計は %d です。\n", comTotal);
+            System.out.println("ブラックジャックなのであなたの負けです。");
+            isEnd =true;
+        }
+
+        if(!isEnd){
+            System.out.println();
+            System.out.printf("ディーラーの合計は %d です。\n", comTotal);
+        }
 
 
-        while(true){
+        while(!isEnd){
             System.out.printf("現在の合計は %d です。\n", playerTotal);
             System.out.printf("もう一度カードを引きますか？(Y/N): ");
             String answer = scan.nextLine();
 
             if(answer.equals("Y")){
                 System.out.println();
-                app.handOutCard(playerCard, Character.PLAYER);
-                playerTotal = app.getTotalPoint(playerCard);
+                handOutCard(playerCard, Character.PLAYER);
+                playerTotal = getTotalPoint(playerCard);
 
                 if(playerTotal > BLACKJACK_NUMBER){
                     System.out.println("バーストしたのであなたの負けです。");
                     isEnd = true;
-                    scan.close();
                     break;
                 }
             } else {
                 System.out.println();
-                scan.close();
                 break;
             }
         }
 
         while((comTotal <= COM_MAX) && !isEnd){
-            app.handOutCard(comCard, Character.DEALER);
-            comTotal = app.getTotalPoint(comCard);
+            handOutCard(comCard, Character.DEALER);
+            comTotal = getTotalPoint(comCard);
 
             System.out.printf("ディーラーの合計は %d です。\n", comTotal);
             System.out.println();
 
             if(comTotal > BLACKJACK_NUMBER){
                 System.out.println("バーストしたのであなたの勝ちです。");
+                coin = coin + BET_COIN_TWENTY;
                 isEnd = true;
                 break;
             }
@@ -90,10 +134,12 @@ public class BlackJack {
         if(!isEnd){
             if(playerTotal > comTotal){
                 System.out.println("あなたの勝ちです");
+                coin = coin + BET_COIN_TWENTY;
             }else if(playerTotal < comTotal){
                 System.out.println("あなたの負けです");
             } else {
                 System.out.println("引き分けです");
+                coin = coin + BET_COIN_TEN;
             }
         }
     }

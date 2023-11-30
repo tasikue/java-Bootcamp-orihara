@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * BlackJack
+ * BlackJack2
+ * チャレンジ1: 修正版
  */
 
-public class BlackJack {
+public class BlackJack2_1 {
 
     private final String[] TRUMP_NUMBER = {
             "A","2","3","4","5","6","7"
@@ -29,7 +30,7 @@ public class BlackJack {
         List<String> comCard = new ArrayList<>();
         Scanner scan = new Scanner(System.in);
 
-        BlackJack app = new BlackJack();
+        BlackJack2_1 app = new BlackJack2_1();
 
         int playerTotal = 0;
         int comTotal = 0;
@@ -46,11 +47,28 @@ public class BlackJack {
         playerTotal = app.getTotalPoint(playerCard);
         comTotal = app.getTotalPoint(comCard);
 
-        System.out.println();
-        System.out.printf("ディーラーの合計は %d です。\n", comTotal);
+        // チャレンジ01: ブラックジャック判定
+        if(playerTotal == BLACKJACK_NUMBER){
+            System.out.println();
+            System.out.printf("現在の合計は %d です。\n", playerTotal);
+            System.out.println("ブラックジャックなのであなたの勝ちです。");
+            isEnd = true;
+        }
+
+        if(comTotal == BLACKJACK_NUMBER){
+            System.out.println();
+            System.out.printf("ディーラーの合計は %d です。\n", comTotal);
+            System.out.println("ブラックジャックなのであなたの負けです。");
+            isEnd =true;
+        }
+
+        if(!isEnd){
+            System.out.println();
+            System.out.printf("ディーラーの合計は %d です。\n", comTotal);
+        }
 
 
-        while(true){
+        while(!isEnd){
             System.out.printf("現在の合計は %d です。\n", playerTotal);
             System.out.printf("もう一度カードを引きますか？(Y/N): ");
             String answer = scan.nextLine();
