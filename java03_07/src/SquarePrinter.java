@@ -8,6 +8,7 @@ public class SquarePrinter {
     public static void main(String[] args) {
 
         String strCharInput = "";
+        
         while (!isInputOneChar(strCharInput)) {
             strCharInput = inputLine();
             showNotInputOneChar(strCharInput);
