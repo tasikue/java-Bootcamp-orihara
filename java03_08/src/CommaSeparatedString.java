@@ -14,21 +14,25 @@ public class CommaSeparatedString {
 
     private static String commaSeparatedString(int number){
         
-        Integer tmpInteger = Integer.valueOf(number);
-        String strNumber = tmpInteger.toString();
+        String strNumber = String.valueOf(number);
 
-        final int LAST_DIGIT = strNumber.length();
+        final int NUMBER_LENGTH = strNumber.length();
         final String COMMA = ",";
 
         String setComma = "";
-        for(int i = 0; i<LAST_DIGIT; i++){
-            setComma = setComma + strNumber.substring(LAST_DIGIT - i - 1, LAST_DIGIT - i);
+        for(int i = 0; i<NUMBER_LENGTH; i++){
+            setComma += strNumber.charAt(NUMBER_LENGTH - i - 1);
+
+            // 3桁毎にカンマを入れる処理
             if(i % 3 == 2){
 
-                if(i == LAST_DIGIT-1) continue;
-                if(strNumber.substring(LAST_DIGIT - i-2, LAST_DIGIT - i-1).equals("-")) continue;
+                // 最後の桁にカンマを打たない処理
+                if(i == NUMBER_LENGTH-1) continue;
+
+                // '-'の直前にカンマを打たない処理
+                if(strNumber.charAt(NUMBER_LENGTH - i-2) == '-') continue;
                 
-                setComma = setComma + COMMA;
+                setComma += COMMA;
             }
         }
         
@@ -38,8 +42,8 @@ public class CommaSeparatedString {
     private static String stringReverse(String str){
         String tmpString = "";
 
-        for(int i=0; i<str.length(); i++){
-            tmpString = tmpString + str.substring(str.length()-i-1, str.length()-i);
+        for(int i = str.length() - 1; i >= 0; i--){
+            tmpString += str.charAt(i);
         }
 
         return tmpString;
