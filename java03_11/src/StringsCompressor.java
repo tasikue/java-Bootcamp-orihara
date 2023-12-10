@@ -13,25 +13,33 @@ public class StringsCompressor {
 
         char[] arrayChar = text.toCharArray();
         int count = 0;
-        char target = ' ';
         String outputText="";
 
         for(int i=1; i<text.length(); i++){
-            target = arrayChar[i];
+            char target = arrayChar[i];
 
-            if(arrayChar[i-1] == target){
-                count++;
-            } else {
-                count++;
-                outputText = outputText + arrayChar[i-1];
+            count++;
+            // ターゲットの文字と一つ前が違う時に文字と数を追加する処理
+            if(arrayChar[i-1] != target){
+                outputText += arrayChar[i-1];
 
-                if(count != 1) outputText = outputText + count;
-
+                if(count != 1){
+                    outputText += count;
+                }
                 count = 0;
+            }
+
+            // 最後の文字の処理
+            if(i == text.length()-1){
+                outputText += arrayChar[text.length()-1];
+
+                if(count > 0){
+                    count++;
+                    outputText += count;
+                }
             }
         }
 
-        outputText = outputText + arrayChar[text.length()-1];
         return outputText;
     }
 }
