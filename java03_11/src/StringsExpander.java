@@ -17,10 +17,21 @@ public class StringsExpander {
         boolean isSetting = false;
 
         for(int i=0; i<text.length(); i++){
-            if(!isNumber(arrayChar[i])){
-                if(isSetting) decodeText = decodeText + target;
+            
+            // 数字ではないときの処理
+            if(!Character.isDigit(arrayChar[i])){
+                // 一文字しかない場合の処理
+                if(isSetting) {
+                    decodeText += target;
+                }
 
                 target = arrayChar[i];
+
+                // 最後の一文字の処理
+                if(i == text.length()-1){
+                    decodeText += target;
+                }
+
                 isSetting = true;
                 continue;
             }
@@ -28,17 +39,13 @@ public class StringsExpander {
  
             int countNumber = Integer.parseInt(splitNumber(text.substring(i, text.length())));
 
+            // 回数分文字を入れる処理
             for(int j=0; j<countNumber; j++){
-                decodeText = decodeText + target;
+                decodeText += target;
             }
         }
-
-        decodeText = decodeText + arrayChar[text.length() - 1];
+        
         return decodeText;
-    }
-
-    private static boolean isNumber(char c){
-        return Character.isDigit(c);
     }
 
     private static String splitNumber(String text){
@@ -47,9 +54,9 @@ public class StringsExpander {
 
         for(int i=0; i<text.length(); i++){
             if(Character.isDigit(text.charAt(i))){
-                number = number + text.substring(i, i+1);
+                number += text.substring(i, i+1);
             } else {
-                return number;
+                break;
             }
         }
         return number;
