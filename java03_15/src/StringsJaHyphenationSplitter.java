@@ -12,7 +12,7 @@ public class StringsJaHyphenationSplitter {
         
         List<String> lines =
         splitFixedLengthJaHyphenationWithLineBreakCodeAndPeriod(
-            "このプログラムは、あああああああ。句読点を行頭禁則処理するサンプル。\n"
+            "このプログラムは、句読点を行頭禁則処理するサンプル。\n"
             + "最後の行です", 8
         );
 
@@ -27,6 +27,7 @@ public class StringsJaHyphenationSplitter {
         List<String> splittedLine = new ArrayList<>();
 
         int charCount = 0;
+        int periodSkipCount = 0;
         for(int i=0; i<inputList.size(); i++){
             String str = inputList.get(i);
 
@@ -35,10 +36,11 @@ public class StringsJaHyphenationSplitter {
             if(BoolChara.isPeriod(firstChar) || BoolChara.isComma(firstChar)){
                 char tempChar = str.charAt(0);
 
-                splittedLine.set(i-1, inputList.get(i-1)+tempChar);
+                splittedLine.set(i-1-periodSkipCount, inputList.get(i-1)+tempChar);
                 charCount++;
             }
 
+            // 句点しかないときに
             if(str.length() <= charCount){
                 continue;
             }
@@ -62,12 +64,16 @@ public class StringsJaHyphenationSplitter {
                 // 次の行に句読点だけにならないようにする処理
                 char inputChar = nextStr.charAt(charCount);
                 if(BoolChara.isPeriod(inputChar)){
-                    str += Chara.PERIOD.getCharacter();
+                    if(!BoolChara.isPeriod(str.charAt(str.length()-1))){
+                        str += Chara.PERIOD.getCharacter();
+                    }
+                    periodSkipCount++;
                     i++;
                 }
 
                 if(BoolChara.isComma(inputChar)){
                     str += Chara.COMMA.getCharacter();
+                    periodSkipCount++;
                     i++;
                 }
             }
