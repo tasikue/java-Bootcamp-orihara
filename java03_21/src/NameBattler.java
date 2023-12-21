@@ -5,14 +5,12 @@ import java.util.Random;
  * メイン
  */
 
-
 public class NameBattler {
 
     final static int NUMBER_OF_PLAYER = 2;
-    final static int MAX_DAMAGE = 3;
-    final static int MIN_DAMAGE = 1;
+    final static int MAX_HUSH = 256;
 
-    static Scanner scan= new Scanner(System.in);
+    static Scanner scan= new Scanner(System.in, "Shift-JIS");
     static Random ram = new Random();
 
     public static void main(String[] args) throws Exception {
@@ -37,7 +35,7 @@ public class NameBattler {
 
         while(!PlayerA.getIsDeath() || !PlayerB.getIsDeath()){
             // player1 -> player2
-            showBattleDamegeCalc(PlayerA, PlayerB);
+            showBattleDamege(PlayerA, PlayerB);
            
             if(PlayerB.getPlayerHp() <= 0){
                 PlayerB.onIsDeath();
@@ -45,7 +43,7 @@ public class NameBattler {
             }
 
             // player 2 -> player1
-            showBattleDamegeCalc(PlayerB, PlayerA);
+            showBattleDamege(PlayerB, PlayerA);
 
             if(PlayerA.getPlayerHp() <= 0){
                 PlayerA.onIsDeath();
@@ -64,17 +62,48 @@ public class NameBattler {
         return playerName;
     }
 
+    private static boolean isLuck(CharacterSetting Player){
+
+        // 乱数0-255
+        int dice = ram.nextInt(MAX_HUSH);
+        return dice - Player.getPlayerLuck() >= 0;
+    }
+
+    private static int getDamageCalc(CharacterSetting PlayerA, CharacterSetting PlayerB){
+
+        int attackDamage = PlayerA.getPlayerStr() - PlayerB.getPlayerDef();
+        
+        // ダメージがマイナスになる場合
+        if(attackDamage < 0){
+            attackDamage = 1;
+        }
+
+        // 乱数0-attack
+        return ram.nextInt(attackDamage);
+    }
+
     private static void showBattleStartText(){
         System.out.println();
         System.out.println("=== バトル開始 ===");
     }
 
-    private static void showBattleDamegeCalc(CharacterSetting PlayerA, CharacterSetting PlayerB){
+    private static void showBattleDamege(CharacterSetting PlayerA, CharacterSetting PlayerB){
 
-        int damage = ram.nextInt(MAX_DAMAGE) + MIN_DAMAGE;
+        int damage = getDamageCalc(PlayerA, PlayerB);
+        System.out.printf("%sの攻撃！\n", PlayerA.getPlayerName()); 
+
+        // 会心の一撃
+        if(isLuck(PlayerA)){
+            damage = PlayerA.getPlayerStr();
+            System.out.println("会心の一撃！");
+        }
+
         PlayerB.decreasePlayerHp(damage);
 
-        System.out.printf("%sの攻撃！\n", PlayerA.getPlayerName());        
+        if(damage == 0){
+            System.out.println("攻撃がミス");
+            return;
+        }
         System.out.printf("%sに %d のダメージ！\n", PlayerB.getPlayerName(), damage);
     }
 
