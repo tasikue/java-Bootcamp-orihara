@@ -21,19 +21,24 @@ public class StringsSplitter {
     
     public static List<String> splitWithLineBreakCode(String text){
 
-        List<String> tmpLine = new ArrayList<>();
+        List<String> splittedLine = new ArrayList<>();
 
         int index = 0;
         for(int i=0; i<text.length(); i++){
 
-            if(BoolChara.isNewLine(text, i)){
+            char targetChar = text.charAt(i);
+            if(BoolChara.isNewLine(targetChar)){
                 String separateText = text.substring(index, i);
                 index = i+1;
                 
-                tmpLine.add(separateText);
+                splittedLine.add(separateText);
             }
         }
+        // 残りの文字の処理
+        if(index != text.length()){
+            splittedLine.add(text.substring(index, text.length()));
+        }
 
-        return tmpLine;
+        return splittedLine;
     }
 }

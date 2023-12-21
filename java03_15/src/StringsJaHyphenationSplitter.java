@@ -7,14 +7,12 @@ import java.util.List;
  */
 
 public class StringsJaHyphenationSplitter {
-
-    // final static char COMMA = '、';
     
     public static void main(String[] args) {
         
         List<String> lines =
         splitFixedLengthJaHyphenationWithLineBreakCodeAndPeriod(
-            "このプログラムは、句読点を行頭禁則処理するサンプル。\n"
+            "このプログラムは、あああああああ。句読点を行頭禁則処理するサンプル。\n"
             + "最後の行です", 8
         );
 
@@ -26,41 +24,57 @@ public class StringsJaHyphenationSplitter {
     public static List<String> splitFixedLengthJaHyphenationWithLineBreakCodeAndPeriod(String text, int split){
 
         List<String> inputList = StringsFixedLengthSplitter.splitFixedLengthWithLineBreakCodeAndPeriod(text, split);
-        List<String> tmpList = new ArrayList<>();
+        List<String> splittedLine = new ArrayList<>();
 
         int charCount = 0;
         for(int i=0; i<inputList.size(); i++){
             String str = inputList.get(i);
 
-            if(BoolChara.isPeriod(str, 0) || BoolChara.isComma(str, 0)){
-                char tmpChar = str.charAt(0);
+            // 前の行の最後に文字を足す処理
+            char firstChar = str.charAt(0);
+            if(BoolChara.isPeriod(firstChar) || BoolChara.isComma(firstChar)){
+                char tempChar = str.charAt(0);
 
-                // 前の行の最後に文字をつける処理
-                tmpList.set(i-1, inputList.get(i-1)+tmpChar);
+                splittedLine.set(i-1, inputList.get(i-1)+tempChar);
+                charCount++;
+            }
 
-                charCount++;                
+            if(str.length() <= charCount){
+                continue;
             }
 
             // 先頭の禁則文字を取り除いて前の文字を足す処理
-            if(charCount > 0 && i<inputList.size()-1){
-                str = 
-                    inputList.get(i).substring(charCount, inputList.get(i).length())
-                    + inputList.get(i+1).substring(0,charCount);
+            boolean hasNextList = i<inputList.size()-1;
+            if(charCount > 0 && hasNextList){
+                String nextStr = inputList.get(i+1);
                 
-                if(BoolChara.isPeriod(inputList.get(i+1), charCount)){
+                str = str.substring(charCount, str.length());
+
+                if(!BoolChara.isPeriod(str.charAt(str.length()-1))){
+                    str += nextStr.substring(0, charCount);
+                }
+
+                // 句点で改行されるときの処理
+                if(BoolChara.isPeriod(str.charAt(str.length()-1))){
+                    charCount = 0;
+                }
+                
+                // 次の行に句読点だけにならないようにする処理
+                char inputChar = nextStr.charAt(charCount);
+                if(BoolChara.isPeriod(inputChar)){
                     str += Chara.PERIOD.getCharacter();
                     i++;
                 }
 
-                if(BoolChara.isComma(inputList.get(i+1), charCount)){
+                if(BoolChara.isComma(inputChar)){
                     str += Chara.COMMA.getCharacter();
                     i++;
                 }
             }
 
-            tmpList.add(str);
+            splittedLine.add(str);
         }
 
-        return tmpList;
+        return splittedLine;
     }
 }

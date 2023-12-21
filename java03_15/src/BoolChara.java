@@ -24,15 +24,15 @@ enum Chara {
 
 public class BoolChara {
 
-    public static Boolean isNewLine(String text, int i){
-        return text.charAt(i) == Chara.NEW_LINE.getCharacter();
+    public static Boolean isNewLine(char c){
+        return c == Chara.NEW_LINE.getCharacter();
     }
 
-    public static Boolean isPeriod(String text, int i){
-        return text.charAt(i) == Chara.PERIOD.getCharacter();
+    public static Boolean isPeriod(char c){
+        return c == Chara.PERIOD.getCharacter();
     }
 
-    public static boolean isComma(String text, int i){
-        return text.charAt(i) == Chara.COMMA.getCharacter();
+    public static boolean isComma(char c){
+        return c == Chara.COMMA.getCharacter();
     }
 }
