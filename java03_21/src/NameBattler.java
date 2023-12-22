@@ -26,9 +26,11 @@ public class NameBattler {
         CharacterSetting Player1 = new CharacterSetting(playerNamelist[0]);
         CharacterSetting Player2 = new CharacterSetting(playerNamelist[1]);
 
-        showBattleStartText();
+        StatusChack.statusChack(Player1, Player2);
+
+        SystemText.showBattleStartText();
         playMainBattle(Player1, Player2);
-        showBattleEndText(Player1, Player2);
+        SystemText.showBattleEndText(Player1, Player2);
     }
 
     static void playMainBattle(CharacterSetting PlayerA, CharacterSetting PlayerB){
@@ -50,7 +52,7 @@ public class NameBattler {
                 return;
             }
 
-            showTurnChangeText(PlayerA, PlayerB);
+            SystemText.showTurnChangeText(PlayerA, PlayerB);
         }
     }
 
@@ -66,7 +68,7 @@ public class NameBattler {
 
         // 乱数0-255
         int dice = ram.nextInt(MAX_HUSH);
-        return dice - Player.getPlayerLuck() >= 0;
+        return Player.getPlayerLuck() - dice >= 0;
     }
 
     private static int getDamageCalc(CharacterSetting PlayerA, CharacterSetting PlayerB){
@@ -80,11 +82,6 @@ public class NameBattler {
 
         // 乱数0-attack
         return ram.nextInt(attackDamage);
-    }
-
-    private static void showBattleStartText(){
-        System.out.println();
-        System.out.println("=== バトル開始 ===");
     }
 
     private static void showBattleDamege(CharacterSetting PlayerA, CharacterSetting PlayerB){
@@ -105,28 +102,5 @@ public class NameBattler {
             return;
         }
         System.out.printf("%sに %d のダメージ！\n", PlayerB.getPlayerName(), damage);
-    }
-
-    private static void showTurnChangeText(CharacterSetting PlayerA, CharacterSetting PlayerB){
-        System.out.println();
-        System.out.println("-次のターン-");
-        System.out.printf("プレイヤー 1: %s(HP %d)\n", PlayerA.getPlayerName(), PlayerA.getPlayerHp());
-        System.out.printf("プレイヤー 2: %s(HP %d)\n", PlayerB.getPlayerName(), PlayerB.getPlayerHp());
-        System.out.println();
-        System.out.println("---");
-        System.out.println();
-    }
-
-    private static void showBattleEndText(CharacterSetting PlayerA, CharacterSetting PlayerB){
-
-        if(PlayerA.getIsDeath()){
-            System.out.printf("%s は力尽きた…\n", PlayerA.getPlayerName());
-            System.out.printf("%s の勝利！！\n", PlayerB.getPlayerName());
-        }
-
-        if(PlayerB.getIsDeath()){
-            System.out.printf("%s は力尽きた…\n", PlayerB.getPlayerName());
-            System.out.printf("%s の勝利！！\n", PlayerA.getPlayerName());
-        }
     }
 }

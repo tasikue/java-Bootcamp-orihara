@@ -1,5 +1,7 @@
 /**
  * StatusChack
+ * ※本課題に関係ないデバック用です。
+ * 
  */
 public class StatusChack {
 
