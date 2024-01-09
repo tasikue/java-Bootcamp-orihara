@@ -20,7 +20,13 @@ public class Stack {
         endIndex++;
     }
 
+    // 何もpushされてなかった時のエラー処理を含む
     public String pop(){
-        return list.get(--endIndex);
+        try{
+            return list.get(--endIndex);
+        } catch(IndexOutOfBoundsException e) {
+            ++endIndex;
+            return "（値がありません．）";
+        }
     }
 }

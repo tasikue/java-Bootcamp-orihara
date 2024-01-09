@@ -28,8 +28,14 @@ import java.util.ArrayList;
         priorityList.add(index, priority);
     }
 
+    // 何もpushされてなかった時のエラー処理を含む
     public String pop(){
-        return list.get(startIndex++);
+        try {
+            return list.get(startIndex++);
+        } catch(IndexOutOfBoundsException e) {
+            startIndex--;
+            return "（値がありません．）";
+        }
     }
 
     // 優先度を比較して挿入位置を出力する処理

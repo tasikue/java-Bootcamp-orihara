@@ -8,10 +8,10 @@ public class App {
 
     public static void main(String[] args) {
         
-        showProblemOne();
-        showProblemTwe();
+        //showProblemOne();
+        //showProblemTwe();
         showProblemThree();
-        showProblemFour();
+        //showProblemFour();
     }
 
     private static void showProblemOne(){

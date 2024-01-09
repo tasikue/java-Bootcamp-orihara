@@ -16,12 +16,17 @@ public class RandomQueue {
     }
 
     public String pop(){
-        Random ran = new Random();
-        int target = ran.nextInt(list.size());
+        try{
+            Random ran = new Random();
+            int target = ran.nextInt(list.size());
 
-        String tempTargetText = list.get(target);
-        list.remove(target);
+            String tempTargetText = list.get(target);
+            list.remove(target);
 
-        return tempTargetText;
+            return tempTargetText;
+        } catch(IndexOutOfBoundsException e) {
+            
+            return "（値がありません．）";
+        }
     }
 }
