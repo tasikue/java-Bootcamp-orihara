@@ -1,3 +1,8 @@
+/*
+ * テキスト表示まとめクラス
+ * 
+ */
+
 public class SystemText {
     
     public static void showBattleStartText(){

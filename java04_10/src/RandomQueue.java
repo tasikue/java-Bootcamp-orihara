@@ -15,18 +15,14 @@ public class RandomQueue {
         list.add(text);
     }
 
+    // どれをpopするかランダムで決めてListから取り除く処理
     public String pop(){
-        try{
-            Random ran = new Random();
-            int target = ran.nextInt(list.size());
+        Random ran = new Random();
+        int target = ran.nextInt(list.size());
 
-            String tempTargetText = list.get(target);
-            list.remove(target);
+        String tempTargetText = list.get(target);
+        list.remove(target);
 
-            return tempTargetText;
-        } catch(IndexOutOfBoundsException e) {
-            
-            return "（値がありません．）";
-        }
+        return tempTargetText;
     }
 }

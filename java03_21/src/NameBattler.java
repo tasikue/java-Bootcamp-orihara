@@ -10,6 +10,7 @@ public class NameBattler {
     final static int NUMBER_OF_PLAYER = 2;
     final static int MAX_HUSH = 256;
 
+    // 日本語入力文字化け対策 Shift-JIS or UTF-8
     static Scanner scan= new Scanner(System.in, "Shift-JIS");
     static Random ram = new Random();
 
