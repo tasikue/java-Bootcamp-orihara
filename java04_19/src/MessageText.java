@@ -24,7 +24,7 @@ public class MessageText {
 
     public static void showEatItemGet(){
         messageln("今日も食べ物を探そう。。。。。。");
-        message("");
+        
     }
 
     private static void message(String text){
