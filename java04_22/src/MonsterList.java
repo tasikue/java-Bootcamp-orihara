@@ -28,7 +28,19 @@ public class MonsterList {
         Random ran = new Random();
 
         // 乱数(重みづけ)
+        int totalEncountRate = 0;
+        for(Monster monster : monsters){
+            totalEncountRate += monster.getEncountRate();
+        }
 
-        return monsters.get(ran.nextInt(monsters.size()));
+        int rate = ran.nextInt(totalEncountRate);
+        for(Monster monster : monsters){
+            if(rate < monster.getEncountRate()){
+                return monster;
+            }
+            rate -= monster.getEncountRate();
+        }
+
+        return null;
     }
 }

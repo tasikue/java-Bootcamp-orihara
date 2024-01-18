@@ -35,6 +35,6 @@ public class CaptureBall {
     * 捕獲玉を使用する
     */
     public void use() {
-        
+        this.count--;
     }
 }
