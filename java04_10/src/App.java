@@ -1,27 +1,36 @@
-/*
+/**
  * javabootcamp04-10
  * 課題の使用例と出力を試すメインクラス
- * 
+ * @auther orihara
+ * @version 1.1
  */
 
 public class App {
 
+    /**
+     * mainメソッド
+     * 課題テスト用
+     * @param args
+     */
     public static void main(String[] args) {
         
         //課題1
-        showProblemOne();
+        executeUsageExample1();
         
         //課題2
-        showProblemTwe();
+        executeUsageExample2();
 
         // 課題3
-        showProblemThree();
+        executeUsageExample3();
 
         // 課題4
-        showProblemFour();
+        executeUsageExample4();
     }
 
-    private static void showProblemOne(){
+    /**
+     * 課題1
+     */
+    private static void executeUsageExample1(){
         // Queue クラスを生成
         Queue queue = new Queue();
 
@@ -36,7 +45,10 @@ public class App {
         System.out.println(queue.pop());
     }
 
-    private static void showProblemTwe(){
+    /**
+     * 課題2
+     */
+    private static void executeUsageExample2(){
         // Stack クラスを生成
         Stack stack = new Stack();
 
@@ -51,7 +63,10 @@ public class App {
         System.out.println(stack.pop());
     }
 
-    private static void showProblemThree(){
+    /**
+     * 課題3
+     */
+    private static void executeUsageExample3(){
         // RandomQueue クラスを生成
         RandomQueue queue = new RandomQueue();
 
@@ -66,7 +81,10 @@ public class App {
         System.out.println(queue.pop());
     }
 
-    private static void showProblemFour(){
+    /**
+     * 課題4
+     */
+    private static void executeUsageExample4(){
         // Queue クラスを生成
         Queue queue = new Queue();
 
