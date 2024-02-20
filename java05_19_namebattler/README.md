@@ -2,27 +2,107 @@
 
 ネームバトラーとは、「名前」からキャラクターを生成して、戦わせるゲームのことです。入力した名前によって、キャラクターのパラメータ（体力、攻撃力、防御力など）が変わります。
 
-## 初級編までのメモ
+
+### 初級編までのメモ
 
 - 基本のバトルシステムを作ろう
-
-まずは基本の１対１のバトルシステムを作成します。 キャラクターが交互に攻撃して、相手を倒せば勝ち！
-
 - 名前でＨＰが変わるようにしてみよう
+- 名前で攻撃力が変わるようにしてみよう
+- 攻撃力と防御力でダメージ計算してみよう
+- 会心の一撃を追加してみよう
 
-名前でキャラクターのステータスが変わらないと、ネームバトラーの意味がない！ というわけで、名前でＨＰが変化する仕組みを追加してみよう。
+
+### 上級編の追加要素
+
+- ベースプログラムを理解する
+- ベースプログラムの機能を強化
+- 素早さで攻撃順が変わる
+- 職業（魔法使い）を追加
+- 職業（僧侶）を追加
+- 職業（好きなもの）を追加
 
 
+### ゲームの流れ
 
-The workspace contains two folders by default, where:
+1. 2プレイヤー分の名前を入力させる
+2. 名前のHash値からステータスを決定し, プレイヤーを作成する
+3. 戦闘開始, 素早さから先攻後攻が決まる
+4. 先攻の攻撃
+5. 後攻キャラのダメージ計算（状態異常のダメージを含む）, 死亡判定
+6. 後攻の攻撃
+7. 先攻キャラのダメージ計算（状態異常のダメージを含む）, 死亡判定
+8. ステータスの表示
+9. 3~8をどちらかが死亡判定が出るまで実行
+10. 勝者が決定しゲームエンド
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## 仕様
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+### プレイヤーのステータス
 
-## Dependency Management
+- プレイヤーネーム
+- JOB: 職業
+- HP: 体力
+- MP: マジックパワー
+- STR: 攻撃力
+- DEF: 防御力
+- LUCK: 幸運度(会心の一撃で使う)
+- AGI: 素早さ(先攻後攻を決めるときに使う)
+- CDN: 状態異常
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+### 職業と行動
+
+- 戦士
+    - HP: 100 ~ 300
+    - MP: 0
+    - STR: 30 ~ 100
+    - DEF: 30 ~ 100
+    - LUCK: 1 ~ 100
+    - AGI: 1 ~ 50
+
+    - 通常攻撃
+
+- 魔法使い
+    - HP: 50 ~ 150
+    - MP: 30 ~ 80
+    - STR: 1 ~ 50
+    - DEF: 1 ~ 50
+    - LUCK: 1 ~ 100
+    - AGI: 20 ~ 60
+
+    - 通常攻撃: 
+        -ダメージ = STR - DEF
+        -会心の一撃の場合 ダメージ = STR
+    - ファイア:
+        - 消費MP: 10
+        - ダメージ = 10 ~ 30
+    - サンダー:
+        - 消費MP: 20
+        - ダメージ = 10 ~ 30
+
+- 僧侶
+    - HP: 80 ~ 200
+    - MP: 20 ~ 50
+    - STR: 10 ~ 70
+    - DEF: 10 ~ 70
+    - LUCK: 1 ~ 100
+    - AGI: 20 ~ 60
+
+    - 通常攻撃: 
+        -ダメージ = STR - DEF
+        -会心の一撃の場合 ダメージ = STR
+    - ヒール:
+        - 消費MP: 20
+        - 自身HPを50回復
+    - パライズ:
+        - 消費MP: 10
+        - 麻痺にする
+    - ポイズン:
+        - 消費MP:
+        - 毒にする
+
+
+### 状態異常
+
+- PALIZE: 麻痺 -> 20%の確率で麻痺で行動不能
+- POISON: 毒 -> 毎ターン20のダメージを受ける
