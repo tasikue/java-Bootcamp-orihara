@@ -1,6 +1,6 @@
-## Getting Started
+# ネームバトラー【上級編】
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+ネームバトラーとは、「名前」からキャラクターを生成して、戦わせるゲームのことです。入力した名前によって、キャラクターのパラメータ（体力、攻撃力、防御力など）が変わります。
 
 ## Folder Structure
 
