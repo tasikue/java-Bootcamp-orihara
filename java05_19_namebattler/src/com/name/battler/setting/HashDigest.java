@@ -1,11 +1,12 @@
-package com.name.battler;
+package com.name.battler.setting;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 
 /**
  * ハッシュダイジェストから数値を取り出す
+ * ハッシュ値は40文字の文字列
  * @param name 名前
- * @param index 何番目の数値を取り出すか
+ * @param index 何番目の数値を取り出すか, 最大20番まで
  * @return 数値(0 ～ 255)
  */
 
