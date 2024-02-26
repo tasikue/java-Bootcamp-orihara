@@ -1,19 +1,30 @@
 package com.name.battler.player;
 
+/**
+ * 職業: 魔法使い
+ * job id: 1
+ */
 public class Wizard extends Player{
 
-    // 変数
+    // 職業別パラメータ（固定値）
+    AbilityRange abilityRange;
+
+    final static int JOB_ID = 1;
 
     // コンストラクタ
-    public Wizard(int jobId){
-        super(jobId);
+    public Wizard(){
+        super(JOB_ID);
+
+        // 職業別パラメータ（固定値）
+        abilityRange = new AbilityRange(150, 50, 80, 30, 50, 1, 50, 1, 100, 1, 60, 20);
     }
-    
+
     /**
-     * @return jobId
+     * 
+     * @return それぞれの能力値範囲
      */
-    public int getJobId(){
-        return super.jobId;
+    public AbilityRange getAbilityRange(){
+        return abilityRange;
     }
 
     @Override
