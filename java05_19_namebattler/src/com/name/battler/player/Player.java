@@ -18,7 +18,7 @@ public abstract class Player implements Attack{
     protected String condition;
 
     // コンストラクタ
-    protected Player(int jobId){
+    public Player(int jobId){
         this.jobId = jobId;
         condition = "通常";
     }
