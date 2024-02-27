@@ -7,8 +7,13 @@ import com.name.battler.player.action.Attack;
  */
 public abstract class Player implements Attack{
 
+    // 職業別パラメータ（固定値）
+    AbilityRange abilityRange;
+
     // プレイヤーステータス
     protected int jobId; // ジョブのID
+    protected String name;
+    protected String jobName;
     protected int hp;
     protected int mp;
     protected int str;
@@ -24,10 +29,28 @@ public abstract class Player implements Attack{
     }
 
     /** --- --- 共通setter & getter --- --- */
+    /** --- @return それぞれの能力値範囲 --- */
+    public AbilityRange getAbilityRange(){
+        return abilityRange;
+    }
+
     /** --- ジョブID --- */
-    /** --- MP --- */
     public int getJobId(){
         return this.jobId;
+    }
+
+    /** --- 名前 --- */
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    /** --- ジョブの名前 --- */
+    public String getJobName(){
+        return this.jobName;
     }
 
     /** --- HP --- */
