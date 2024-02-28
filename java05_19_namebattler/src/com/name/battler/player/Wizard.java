@@ -1,10 +1,13 @@
 package com.name.battler.player;
 
+import com.name.battler.player.action.Fire;
+import com.name.battler.player.action.Thunder;
+
 /**
  * 職業: 魔法使い
  * job id: 1
  */
-public class Wizard extends Player{
+public class Wizard extends Player implements Fire, Thunder {
 
     final static int JOB_ID = 1;
 
@@ -18,8 +21,14 @@ public class Wizard extends Player{
     }
 
     @Override
-    public void doNormalAttack() {
+    public int doThunderAttack() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'doNormalAttack'");
+        throw new UnsupportedOperationException("Unimplemented method 'doThunderAttack'");
+    }
+
+    @Override
+    public int doFireAttack() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'doFireAttack'");
     }
 }

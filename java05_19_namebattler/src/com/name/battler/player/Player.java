@@ -1,6 +1,9 @@
 package com.name.battler.player;
 
+import java.util.Random;
+
 import com.name.battler.player.action.Attack;
+import com.name.battler.statustext.EnumText;
 
 /**
  * プレイヤーの基底クラス
@@ -9,6 +12,9 @@ public abstract class Player implements Attack{
 
     // 職業別パラメータ（固定値）
     AbilityRange abilityRange;
+
+    // 定数
+    final int RANDOM_MAX = 100;
 
     // プレイヤーステータス
     protected int jobId; // ジョブのID
@@ -121,10 +127,43 @@ public abstract class Player implements Attack{
 
     /** --- --- 共通行動 --- --- */
     /**
-     * 通常攻撃を行うメソッド
+     *  通常攻撃を行うメソッド
      * @return ダメージ
      */
-    public int doNormalAttack(int enemyDef){
-        return this.str - enemyDef;
+    @Override
+    public int doNormalAttack(Player player) {
+        int damage = this.str - player.getDef();
+
+        // 相手の防御が上回った時ダメージを0にする
+        if(damage < 0){
+            damage = 0;
+        }
+
+        // 会心の一撃判定
+        if(isCritical(player.luck)){
+            System.out.printf(EnumText.CRITICAL_TEXT.getText());
+            damage = this.str;
+        }
+
+        return damage;
+    }
+
+    /**
+     * 会心の一撃かどうかを判定する処理
+     * @param luck 幸運度
+     * @return 会心の一撃か
+     */
+    private boolean isCritical(int luck){
+        Random ran = new Random();
+
+        return luck - ran.nextInt(RANDOM_MAX)+1 > 0;
+    }
+    
+    /**
+     * ダメージを受けてHPを減らす
+     * @param damage 相手からのダメージ
+     */
+    public void decreaseHp(int damage){
+        this.setHp(this.hp - damage);
     }
 }

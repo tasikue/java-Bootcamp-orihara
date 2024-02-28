@@ -13,7 +13,8 @@ public enum EnumText {
     STATUS_TEXT_03("HP: %d, MP: %d, こうげき: %d, ぼうぎょ: %d, こううん: %d, すばやさ: %d \n"),
     BATTLE_START_TEXT_01("2体の魔物はにらみ合っている..."),
     BATTLE_START_TEXT_02("魔物たちは戦いだした！"),
-    START_SETTING_LAST_TEXT("\n");
+    START_SETTING_LAST_TEXT("\n"),
+    CRITICAL_TEXT("SMAAAAAAAAASH!!!! \n");
 
     private String text;
 

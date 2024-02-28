@@ -16,8 +16,4 @@ public class Fighter extends Player{
         // 職業別パラメータ（固定値）
         abilityRange = new AbilityRange(300, 100, 0, 0, 100, 30, 100, 30, 100, 1, 50, 1);
     }
-
-    @Override
-    public void doNormalAttack() {
-    }
 }

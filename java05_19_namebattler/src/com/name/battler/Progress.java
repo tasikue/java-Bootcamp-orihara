@@ -13,6 +13,8 @@ public class Progress {
 
     // 定数
     final int NAME_COUNT = 2;
+    final int FIRST_PLAYER = 0;
+    final int SECOND_PLAYER = 1;
 
     Scanner scan;
     List<Player> playerList = new ArrayList<>();
@@ -26,6 +28,7 @@ public class Progress {
     public void mainProgress(){
         // 1. の最初のダイアログ
         Dialogue.showStartSettingText();
+
 
 
         /* --- 1. プレイヤーの作成 --- */
@@ -52,24 +55,55 @@ public class Progress {
         Dialogue.showStartSettingLastText();
 
 
+
         /* --- 2. バトルフェイズ --- */
         // 2. の最初のダイアログ
         Dialogue.showStartBattleText();
 
-        // 先攻を選択
+
+        // 2体のプレイヤーの先攻後攻の順でorderPlayerに収納する
+        List<Player> orderPlayer = new ArrayList<>();
         
+        if(playerList.get(FIRST_PLAYER).getAgi() - playerList.get(SECOND_PLAYER).getAgi() >= 0){
+            orderPlayer.add(playerList.get(FIRST_PLAYER));
+            orderPlayer.add(playerList.get(SECOND_PLAYER));
+        } else {
+            orderPlayer.add(playerList.get(SECOND_PLAYER));
+            orderPlayer.add(playerList.get(FIRST_PLAYER));
+        }
 
-        // 選択された方が攻撃
+        // 先攻の攻撃のダイアログ
+        System.out.printf("%s のこうげき！ \n", orderPlayer.get(FIRST_PLAYER).getName());
 
-        // ダメージを受ける＆状態異常判定
+        
+        // 先攻が攻撃をしダメージを与える
+        int damage = orderPlayer.get(FIRST_PLAYER).doNormalAttack(orderPlayer.get(SECOND_PLAYER));
+        orderPlayer.get(SECOND_PLAYER).decreaseHp(damage);
+
+        // ダメージのダイアログ
+        System.out.printf("%s は %d のダメージを受けた！ \n", orderPlayer.get(SECOND_PLAYER).getName(), damage);
+
+        // 状態異常判定
 
         // 死亡判定
 
-        // 後攻を選択
+        // 先攻の攻撃のダイアログ
+        System.out.printf("%s のこうげき！ \n", orderPlayer.get(SECOND_PLAYER).getName());
+
+        // 先攻が攻撃をしダメージを与える
+        damage = orderPlayer.get(SECOND_PLAYER).doNormalAttack(orderPlayer.get(FIRST_PLAYER));
+        orderPlayer.get(FIRST_PLAYER).decreaseHp(damage);
+
+        // ダメージのダイアログ
+        System.out.printf("%s は %d のダメージを受けた！ \n", orderPlayer.get(FIRST_PLAYER).getName(), damage);
 
         // ダメージ判定&状態異常判定
 
         // 死亡判定
+
+        // ステータス表示
+        Dialogue.showStatusText(orderPlayer.get(FIRST_PLAYER));
+        Dialogue.showStatusText(orderPlayer.get(SECOND_PLAYER));
 
 
         // 勝者の決定
