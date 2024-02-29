@@ -21,7 +21,7 @@ public class Dialogue {
         System.out.printf(EnumText.STATUS_TEXT_01.getText(), player.getName());
         System.out.printf(EnumText.STATUS_TEXT_02.getText(), player.getJobName());
         System.out.printf(EnumText.STATUS_TEXT_03.getText(), player.getHp(), player.getMp(), player.getStr(), player.getDef(), player.getLuck(), player.getAgi());
-        messageln(EnumText.LINE_TEXT.getText());
+        message(EnumText.LINE_TEXT.getText());
     }
 
     // バトルフェイズ開始のテキスト

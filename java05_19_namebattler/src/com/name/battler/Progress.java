@@ -1,6 +1,7 @@
 package com.name.battler;
 
 import java.util.Scanner;
+import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -15,6 +16,7 @@ public class Progress {
     final int NAME_COUNT = 2;
     final int FIRST_PLAYER = 0;
     final int SECOND_PLAYER = 1;
+    final int ACTION_COUNT_MAX = 4;
 
     Scanner scan;
     List<Player> playerList = new ArrayList<>();
@@ -72,44 +74,44 @@ public class Progress {
             orderPlayer.add(playerList.get(FIRST_PLAYER));
         }
 
-        // 先攻の攻撃のダイアログ
-        System.out.printf("%s のこうげき！ \n", orderPlayer.get(FIRST_PLAYER).getName());
 
-        
-        // 先攻が攻撃をしダメージを与える
-        int damage = orderPlayer.get(FIRST_PLAYER).doNormalAttack(orderPlayer.get(SECOND_PLAYER));
-        orderPlayer.get(SECOND_PLAYER).decreaseHp(damage);
+        // 戦闘ループ 
+        while(true){
+            // 技をランダムで仕込む
+            Random ran = new Random();
 
-        // ダメージのダイアログ
-        System.out.printf("%s は %d のダメージを受けた！ \n", orderPlayer.get(SECOND_PLAYER).getName(), damage);
+            // 技行使とダメージ判定
+            int damage = orderPlayer.get(FIRST_PLAYER).selectAttack(ran.nextInt(ACTION_COUNT_MAX), orderPlayer.get(SECOND_PLAYER));
+            orderPlayer.get(SECOND_PLAYER).decreaseHp(damage);
 
-        // 状態異常判定
+            // 状態異常判定
+            System.out.println();
+            System.out.println(orderPlayer.get(FIRST_PLAYER).getName() +": " + orderPlayer.get(FIRST_PLAYER).getCondition());
+            System.out.println(orderPlayer.get(SECOND_PLAYER).getName() +": " + orderPlayer.get(SECOND_PLAYER).getCondition());
+            System.out.println();
 
-        // 死亡判定
+            // 死亡判定
+            if(orderPlayer.get(SECOND_PLAYER).isDead()){
+                System.out.println();
+                System.out.printf(EnumText.DEAD_TEXT.getText(), orderPlayer.get(SECOND_PLAYER).getName());
+                break;
+            }
 
-        // 先攻の攻撃のダイアログ
-        System.out.printf("%s のこうげき！ \n", orderPlayer.get(SECOND_PLAYER).getName());
+            // 先攻後攻を入れ替える
+            Player tempPlayer = orderPlayer.get(FIRST_PLAYER);
+            orderPlayer.set(FIRST_PLAYER, orderPlayer.get(SECOND_PLAYER));
+            orderPlayer.set(SECOND_PLAYER, tempPlayer);
+        }
 
-        // 先攻が攻撃をしダメージを与える
-        damage = orderPlayer.get(SECOND_PLAYER).doNormalAttack(orderPlayer.get(FIRST_PLAYER));
-        orderPlayer.get(FIRST_PLAYER).decreaseHp(damage);
-
-        // ダメージのダイアログ
-        System.out.printf("%s は %d のダメージを受けた！ \n", orderPlayer.get(FIRST_PLAYER).getName(), damage);
-
-        // ダメージ判定&状態異常判定
-
-        // 死亡判定
-
-        // ステータス表示
-        Dialogue.showStatusText(orderPlayer.get(FIRST_PLAYER));
-        Dialogue.showStatusText(orderPlayer.get(SECOND_PLAYER));
-
-
-        // 勝者の決定
+        // 2. の最後のダイアログ
+        Dialogue.showStartSettingLastText();
 
 
         /* --- 3. 締め --- */
+        // 勝者の決定
+        // ステータス表示
+        Dialogue.showStatusText(orderPlayer.get(FIRST_PLAYER));
+        Dialogue.showStatusText(orderPlayer.get(SECOND_PLAYER));
     }
 
 
@@ -118,7 +120,8 @@ public class Progress {
      * @return プレイヤーネーム
      */
     private String createPlayerName(){
-        scan = new Scanner(System.in);
+        // 日本語入力文字化け対策 Shift-JIS or UTF-8
+        scan = new Scanner(System.in, "Shift-JIS");
 
         // 変数
         boolean isValidInput = false;

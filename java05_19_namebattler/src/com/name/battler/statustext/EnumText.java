@@ -14,7 +14,18 @@ public enum EnumText {
     BATTLE_START_TEXT_01("2体の魔物はにらみ合っている..."),
     BATTLE_START_TEXT_02("魔物たちは戦いだした！"),
     START_SETTING_LAST_TEXT("\n"),
-    CRITICAL_TEXT("SMAAAAAAAAASH!!!! \n");
+    BATTLE_ATTACK_TEXT01("%s のこうげき ！ \n"),
+    BATTLE_ATTACK_TEXT02("%s は %d のダメージを受けた！ \n"),
+    BATTLE_ATTACK_MISS_TEXT("しかし こうげきは外れた！\n"),
+    CRITICAL_TEXT("SMAAAAAAAAASH!!!! \n"),
+    POISON_TEXT("%s の毒攻撃！ \n"),
+    PALAIZE_TEXT("%s の麻痺攻撃！ \n"),
+    HEEL_TEXT("%s の回復！ \n"),
+    HEEL_TEXT02("%s は %d 回復した ！ \n"),
+    HEEL_TEXT03("MPが足りない！\n"),
+    DEAD_TEXT("%s は崩れて消滅した...\n"),
+    FIRE_TEXT("%s はファイヤを唱えた！\n"),
+    THUNDER_TEXT("%s はサンダーを唱えた！\n");
 
     private String text;
 

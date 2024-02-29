@@ -15,6 +15,11 @@ public abstract class Player implements Attack{
 
     // 定数
     final int RANDOM_MAX = 100;
+    final int POISON_ID = 1;
+    final int PALIZE_ID = 2;
+    final String NORMAL_CONDITION = "normal";
+    final String POISON_CONDITION = "poison";
+    final String PALIZE_CONDITION = "palize";
 
     // プレイヤーステータス
     protected int jobId; // ジョブのID
@@ -31,7 +36,7 @@ public abstract class Player implements Attack{
     // コンストラクタ
     public Player(int jobId){
         this.jobId = jobId;
-        condition = "通常";
+        condition = NORMAL_CONDITION;
     }
 
     /** --- --- 共通setter & getter --- --- */
@@ -114,7 +119,26 @@ public abstract class Player implements Attack{
     }
 
     /** --- 状態異常 --- */
-    protected String getCondition(){
+    public void setCondition(int conditionId){
+        switch(conditionId){
+            // 毒状態
+            case POISON_ID: 
+                this.condition = POISON_CONDITION;
+            break;
+
+            // 麻痺状態
+            case PALIZE_ID:
+                this.condition = PALIZE_CONDITION;
+            break;
+
+            // 通常状態
+            default:
+                this.condition = NORMAL_CONDITION;
+            break;
+        }
+    }
+
+    public String getCondition(){
         return condition;
     }
 
@@ -158,6 +182,49 @@ public abstract class Player implements Attack{
 
         return luck - ran.nextInt(RANDOM_MAX)+1 > 0;
     }
+
+    /**
+     * MPを消費して魔法が使えるかどうか
+     * @return 魔法が使えるか
+     */
+    protected boolean canActionDecreaseMp(int cost){
+        if (this.mp >= cost){
+            this.setMp(this.mp - cost);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param attackId
+     * @param player
+     * @return
+     */
+
+    /**
+     * 技IDから技を選択する処理
+     */
+    public int selectAttack(int attackId, Player player){
+        int damage = 0;
+
+        switch(attackId){
+            default:
+            // 攻撃時のテキストとダメージテキスト
+            System.out.printf(EnumText.BATTLE_ATTACK_TEXT01.getText(), this.getName());
+            damage = doNormalAttack(player);
+
+            // 0ダメージの時テキストを替える
+            if(damage == 0){
+                System.out.printf(EnumText.BATTLE_ATTACK_MISS_TEXT.getText()); 
+            } else {
+                System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
+            }
+            break;
+        }
+
+        return damage;
+    }
     
     /**
      * ダメージを受けてHPを減らす
@@ -166,4 +233,13 @@ public abstract class Player implements Attack{
     public void decreaseHp(int damage){
         this.setHp(this.hp - damage);
     }
+
+    /**
+     * HPを見て死亡判定
+     * @return 死んだかどうか
+     */
+    public boolean isDead(){
+        return this.hp <= 0;
+    }
+    
 }

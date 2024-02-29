@@ -41,7 +41,7 @@ public class PlayerMaking {
      * ハッシュで得た0-256を上限下限で丸める
      */
     private int getAbilityValue(String name, int index, int maxValue, int minValue){
-        return (maxValue - minValue) * hash.generateNumber(name, index) / (HASH_MAX - HASH_MIN);
+        return (maxValue - minValue) * hash.generateNumber(name, index) / (HASH_MAX - HASH_MIN) + minValue;
     }
 
     /**
