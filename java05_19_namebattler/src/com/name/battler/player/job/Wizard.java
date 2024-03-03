@@ -1,9 +1,12 @@
-package com.name.battler.player;
+package com.name.battler.player.job;
 
 import java.util.Random;
 
+import com.name.battler.player.AbilityRange;
+import com.name.battler.player.Player;
 import com.name.battler.player.action.Fire;
 import com.name.battler.player.action.Thunder;
+import com.name.battler.player.enumplayer.EnumAction;
 import com.name.battler.statustext.EnumText;
 
 /**
@@ -34,7 +37,20 @@ public class Wizard extends Player implements Fire, Thunder {
         jobName = "魔法使い";
 
         // 職業別パラメータ（固定値）
-        abilityRange = new AbilityRange(150, 50, 80, 30, 50, 1, 50, 1, 100, 1, 60, 20);
+        abilityRange = new AbilityRange(
+                        150,
+                        50,
+                        80,
+                        30,
+                        50,
+                        1,
+                        50,
+                        1,
+                        100,
+                        1,
+                        60,
+                        20
+                    );
     }
 
     /**
@@ -72,7 +88,7 @@ public class Wizard extends Player implements Fire, Thunder {
             damage = doThunderAttack();
 
             // ダメージテキスト
-            System.out.printf(EnumText.FIRE_TEXT.getText(), this.getName());
+            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.FIRE.getActionName());
             System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
 
             return damage;
@@ -82,7 +98,7 @@ public class Wizard extends Player implements Fire, Thunder {
             damage = doFireAttack();
 
             // ダメージテキスト
-            System.out.printf(EnumText.THUNDER_TEXT.getText(), this.getName());
+            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.THUNDER.getActionName());
             System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
 
             return damage;

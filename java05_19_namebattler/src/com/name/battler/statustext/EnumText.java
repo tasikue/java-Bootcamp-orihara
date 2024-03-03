@@ -9,7 +9,7 @@ public enum EnumText {
     NAME_PUT_TEXT("%d 体目の名前は... "),
     LINE_TEXT("------------------------------"),
     STATUS_TEXT_01("%s \n"),
-    STATUS_TEXT_02("職業: %s | 技名:  \n"),
+    STATUS_TEXT_02("職業: %s | \n"),
     STATUS_TEXT_03("HP: %d, MP: %d, こうげき: %d, ぼうぎょ: %d, こううん: %d, すばやさ: %d \n"),
     BATTLE_START_TEXT_01("2体の魔物はにらみ合っている..."),
     BATTLE_START_TEXT_02("魔物たちは戦いだした！"),
@@ -18,14 +18,13 @@ public enum EnumText {
     BATTLE_ATTACK_TEXT02("%s は %d のダメージを受けた！ \n"),
     BATTLE_ATTACK_MISS_TEXT("しかし こうげきは外れた！\n"),
     CRITICAL_TEXT("SMAAAAAAAAASH!!!! \n"),
-    POISON_TEXT("%s の毒攻撃！ \n"),
-    PALAIZE_TEXT("%s の麻痺攻撃！ \n"),
-    HEEL_TEXT("%s の回復！ \n"),
-    HEEL_TEXT02("%s は %d 回復した ！ \n"),
+    HEEL_TEXT02("%s は HP %d まで回復した ！ \n"),
     HEEL_TEXT03("MPが足りない！\n"),
     DEAD_TEXT("%s は崩れて消滅した...\n"),
-    FIRE_TEXT("%s はファイヤを唱えた！\n"),
-    THUNDER_TEXT("%s はサンダーを唱えた！\n");
+    MAGIC_TEXT("%s は %s を唱えた！\n"),
+    PLAYER_STATUS_TEXT("ジョブID: %d, HP: %d, MP: %d, 攻撃力: %d, 防御力: %d, 幸運度: %d, すばやさ: %d \n"),
+    POISON_DAMAGE_TEXT("%s は %s のダメージを受けている ...！ \n"),
+    PALIZE_TEXT("%s は %s で動けない ...！ \n");
 
     private String text;
 

@@ -20,7 +20,20 @@ public class AbilityRange {
     private int AGI_MIN;
 
     // コンストラクタ
-    AbilityRange(int HP_MAX, int HP_MIN, int MP_MAX, int MP_MIN, int STR_MAX, int STR_MIN, int DEF_MAX, int DEF_MIN, int LUCK_MAX, int LUCK_MIN, int AGI_MAX, int AGI_MIN){
+    public AbilityRange(
+        int HP_MAX,
+        int HP_MIN,
+        int MP_MAX,
+        int MP_MIN,
+        int STR_MAX,
+        int STR_MIN,
+        int DEF_MAX,
+        int DEF_MIN,
+        int LUCK_MAX,
+        int LUCK_MIN,
+        int AGI_MAX,
+        int AGI_MIN
+    ){
         this.HP_MAX = HP_MAX;
         this.HP_MIN = HP_MIN;
         this.MP_MAX = MP_MAX;

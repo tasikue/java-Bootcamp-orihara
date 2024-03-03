@@ -3,6 +3,7 @@ package com.name.battler.player;
 import java.util.Random;
 
 import com.name.battler.player.action.Attack;
+import com.name.battler.player.enumplayer.EnumCondition;
 import com.name.battler.statustext.EnumText;
 
 /**
@@ -10,33 +11,28 @@ import com.name.battler.statustext.EnumText;
  */
 public abstract class Player implements Attack{
 
-    // 職業別パラメータ（固定値）
-    AbilityRange abilityRange;
+    // 職業別パラメータ
+    protected AbilityRange abilityRange;
 
     // 定数
     final int RANDOM_MAX = 100;
-    final int POISON_ID = 1;
-    final int PALIZE_ID = 2;
-    final String NORMAL_CONDITION = "normal";
-    final String POISON_CONDITION = "poison";
-    final String PALIZE_CONDITION = "palize";
 
     // プレイヤーステータス
     protected int jobId; // ジョブのID
-    protected String name;
-    protected String jobName;
-    protected int hp;
-    protected int mp;
-    protected int str;
-    protected int def;
-    protected int luck;
-    protected int agi;
-    protected String condition;
+    protected String name; // キャラの名前
+    protected String jobName; // ジョブの名前
+    protected int hp; // キャラのHP
+    protected int mp; // キャラのMP
+    protected int str; // キャラの攻撃力
+    protected int def; // キャラの防御力
+    protected int luck; // キャラの幸福度
+    protected int agi; // キャラの素早さ
+    protected String condition; // キャラの状態異常
 
     // コンストラクタ
     public Player(int jobId){
         this.jobId = jobId;
-        condition = NORMAL_CONDITION;
+        condition = EnumCondition.NORMAL.getConditionName();
     }
 
     /** --- --- 共通setter & getter --- --- */
@@ -51,10 +47,6 @@ public abstract class Player implements Attack{
     }
 
     /** --- 名前 --- */
-    public void setName(String name){
-        this.name = name;
-    }
-
     public String getName(){
         return this.name;
     }
@@ -65,86 +57,92 @@ public abstract class Player implements Attack{
     }
 
     /** --- HP --- */
-    public void setHp(int hp){
-        this.hp = hp;
-    }
-
     public int getHp(){
         return this.hp;
     }
 
     /** --- MP --- */
-    public void setMp(int mp){
-        this.mp = mp;
-    }
-
     public int getMp(){
         return this.mp;
     }
 
     /** --- STR(攻撃力) --- */
-    public void setStr(int str){
-        this.str = str;
-    }
-
     public int getStr(){
         return this.str;
     }
 
     /** --- DEF(防御力) --- */
-    public void setDef(int def){
-        this.def = def;
-    }
-
     public int getDef(){
         return this.def;
     }
 
     /** --- LUCK(幸運度) --- */
-    public void setLuck(int luck){
-        this.luck = luck;
-    }
-
     public int getLuck(){
         return this.luck;
     }
 
     /** --- AGI(すばやさ) --- */
-    public void setAgi(int agi){
-        this.agi = agi;
-    }
-
     public int getAgi(){
         return this.agi;
     }
 
     /** --- 状態異常 --- */
-    public void setCondition(int conditionId){
-        switch(conditionId){
+    /**
+     * 列挙型のEnumConditionクラスにより状態異常を設定する処理
+     * @param condition
+     */
+    public void setCondition(EnumCondition condition){
+        switch(condition){
             // 毒状態
-            case POISON_ID: 
-                this.condition = POISON_CONDITION;
+            case POISON: 
+                this.condition = EnumCondition.POISON.getConditionName();
             break;
 
             // 麻痺状態
-            case PALIZE_ID:
-                this.condition = PALIZE_CONDITION;
+            case PALIZE:
+                this.condition = EnumCondition.PALIZE.getConditionName();
             break;
 
             // 通常状態
             default:
-                this.condition = NORMAL_CONDITION;
+                this.condition = EnumCondition.NORMAL.getConditionName();
             break;
         }
     }
 
+    /**
+     * プレイヤーの状態異常を得る処理
+     * @return 状態異常名
+     */
     public String getCondition(){
         return condition;
     }
 
-    // すべてのステータスを表示
+    /**
+     * 名前・HP・MP・こうげき・ぼうぎょ・こううん・すばやさの値をセット
+     * @param name プレイヤーの名前
+     * @param hp プレイヤーのHP
+     * @param mp プレイヤーのMP
+     * @param str プレイヤーのこうげき
+     * @param def プレイヤーのぼうぎょ
+     * @param luck プレイヤーのこううん
+     * @param agi プレイヤーのすばやさ
+     */
+    public void setPlayerStatus(String name, int hp, int mp, int str, int def, int luck, int agi){
+        this.name = name;
+        this.hp = hp;
+        this.mp = mp;
+        this.str = str;
+        this.def = def;
+        this.luck = luck;
+        this.agi = agi;
+    }
+
+    /**
+     * すべてのステータスを表示
+     */
     public void showAllStatus(){
-        System.out.printf("ジョブID: %d, HP: %d, MP: %d, 攻撃力: %d, 防御力: %d, 幸運度: %d, すばやさ: %d",
+        System.out.printf(EnumText.PLAYER_STATUS_TEXT.getText(),
             this.jobId, this.hp, this.mp, this.str, this.def, this.luck, this.agi
          );
     }
@@ -189,18 +187,11 @@ public abstract class Player implements Attack{
      */
     protected boolean canActionDecreaseMp(int cost){
         if (this.mp >= cost){
-            this.setMp(this.mp - cost);
+            this.mp = this.mp - cost;
             return true;
         }
         return false;
     }
-
-    /**
-     * 
-     * @param attackId
-     * @param player
-     * @return
-     */
 
     /**
      * 技IDから技を選択する処理
@@ -231,7 +222,7 @@ public abstract class Player implements Attack{
      * @param damage 相手からのダメージ
      */
     public void decreaseHp(int damage){
-        this.setHp(this.hp - damage);
+        this.hp = this.hp - damage;
     }
 
     /**

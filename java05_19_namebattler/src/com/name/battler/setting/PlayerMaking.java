@@ -30,10 +30,7 @@ public class PlayerMaking {
     Player player;
     
     // コンストラクタ
-    public PlayerMaking(String name){
-
-        // 職業の選択
-        jobId = getAbilityValue(name, HASH_INDEX_ZERO, JOB_COUNT, 0);
+    public PlayerMaking(String name, int jobId){
         player = setJob(name, jobId);
     }
 
@@ -54,14 +51,16 @@ public class PlayerMaking {
         JobManager jobManager = new JobManager();
         player = jobManager.getJob(jobId);
 
-        // それぞれの値をセット
-        player.setName(name);
-        player.setHp(getAbilityValue(name, HASH_INDEX_ONE, player.getAbilityRange().getHpMax(), player.getAbilityRange().getHpMin()));
-        player.setMp(getAbilityValue(name, HASH_INDEX_TWE, player.getAbilityRange().getMpMax(), player.getAbilityRange().getMpMin()));
-        player.setStr(getAbilityValue(name, HASH_INDEX_THREE, player.getAbilityRange().getStrMax(), player.getAbilityRange().getStrMin()));
-        player.setDef(getAbilityValue(name, HASH_INDEX_FOUR, player.getAbilityRange().getDefMax(), player.getAbilityRange().getDefMin()));
-        player.setLuck(getAbilityValue(name, HASH_INDEX_FIVE, player.getAbilityRange().getLuckMax(), player.getAbilityRange().getLuckMin()));
-        player.setAgi(getAbilityValue(name, HASH_INDEX_SIX, player.getAbilityRange().getAgiMax(), player.getAbilityRange().getAgiMin()));
+        // 名前・HP・MP・こうげき・ぼうぎょ・こううん・すばやさの値をセット
+        player.setPlayerStatus(
+            name, 
+            getAbilityValue(name, HASH_INDEX_ONE, player.getAbilityRange().getHpMax(), player.getAbilityRange().getHpMin()),
+            getAbilityValue(name, HASH_INDEX_TWE, player.getAbilityRange().getMpMax(), player.getAbilityRange().getMpMin()),
+            getAbilityValue(name, HASH_INDEX_THREE, player.getAbilityRange().getStrMax(), player.getAbilityRange().getStrMin()),
+            getAbilityValue(name, HASH_INDEX_FOUR, player.getAbilityRange().getDefMax(), player.getAbilityRange().getDefMin()),
+            getAbilityValue(name, HASH_INDEX_FIVE, player.getAbilityRange().getLuckMax(), player.getAbilityRange().getLuckMin()),
+            getAbilityValue(name, HASH_INDEX_SIX, player.getAbilityRange().getAgiMax(), player.getAbilityRange().getAgiMin())
+        );
 
         return player;
     }
