@@ -162,7 +162,7 @@ public abstract class Player implements Attack{
         }
 
         // 会心の一撃判定
-        if(isCritical(player.luck)){
+        if(isCritical(this.luck)){
             System.out.printf(EnumText.CRITICAL_TEXT.getText());
             damage = this.str;
         }

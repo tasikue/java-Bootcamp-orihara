@@ -201,11 +201,4 @@ public class Progress {
 
         return jobId;
     }
-    
-    public static void main(String[] args) {
-        Progress p = new Progress();
-
-        p.mainProgress();
-
-    }
 }
