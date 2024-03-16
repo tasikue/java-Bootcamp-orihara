@@ -7,15 +7,14 @@ import com.name.battler.player.Player;
 import com.name.battler.player.action.Fire;
 import com.name.battler.player.action.Thunder;
 import com.name.battler.player.enumplayer.EnumAction;
+import com.name.battler.player.enumplayer.EnumJob;
+import com.name.battler.player.enumplayer.EnumJobParameter;
 import com.name.battler.statustext.EnumText;
 
 /**
  * 職業: 魔法使い
- * job id: 1
  */
 public class Wizard extends Player implements Fire, Thunder {
-
-    final static int JOB_ID = 1;
 
     // 技ID
     final int FIRE_ID = 1;
@@ -31,26 +30,18 @@ public class Wizard extends Player implements Fire, Thunder {
 
     Random ran = new Random();
 
-    // コンストラクタ
+    /**
+     * コンストラクタ
+     * 
+     * ジョブID -> 1
+     * ジョブ名 -> 魔法使い
+     * ジョブパラメータ -> 魔法使いのパラメータ
+     */
     public Wizard(){
-        super(JOB_ID);
-        jobName = "魔法使い";
+        super(EnumJob.WIZARD.getId());
 
-        // 職業別パラメータ（固定値）
-        abilityRange = new AbilityRange(
-                        150,
-                        50,
-                        80,
-                        30,
-                        50,
-                        1,
-                        50,
-                        1,
-                        100,
-                        1,
-                        60,
-                        20
-                    );
+        jobName = EnumJob.WIZARD.getName();
+        abilityRange = new AbilityRange(EnumJobParameter.WIZARD_PARAMETTER);
     }
 
     /**
@@ -88,7 +79,7 @@ public class Wizard extends Player implements Fire, Thunder {
             damage = doThunderAttack();
 
             // ダメージテキスト
-            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.FIRE.getActionName());
+            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.FIRE.getName());
             System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
 
             return damage;
@@ -98,7 +89,7 @@ public class Wizard extends Player implements Fire, Thunder {
             damage = doFireAttack();
 
             // ダメージテキスト
-            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.THUNDER.getActionName());
+            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.THUNDER.getName());
             System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
 
             return damage;

@@ -2,34 +2,25 @@ package com.name.battler.player.job;
 
 import com.name.battler.player.AbilityRange;
 import com.name.battler.player.Player;
+import com.name.battler.player.enumplayer.EnumJob;
+import com.name.battler.player.enumplayer.EnumJobParameter;
 
 /**
- * 職業: 戦士
- * job id: 0
+ * 職業: 戦士クラス
  */
 public class Fighter extends Player{
 
-    final static int JOB_ID = 0;
-    
-    // コンストラクタ
+    /**
+     * コンストラクタ
+     * 
+     * ジョブID -> 0
+     * ジョブ名 -> 戦士
+     * ジョブパラメータ -> 戦士のパラメータ
+     */
     public Fighter(){
-        super(JOB_ID);
-        jobName = "戦士";
+        super(EnumJob.FIGHTER.getId());
 
-        // 職業別パラメータ（固定値）
-        abilityRange = new AbilityRange(
-                        300, 
-                        100, 
-                        0, 
-                        0, 
-                        100, 
-                        30, 
-                        100, 
-                        30, 
-                        100, 
-                        1, 
-                        50, 
-                        1
-                    );
+        jobName = EnumJob.FIGHTER.getName();
+        abilityRange = new AbilityRange(EnumJobParameter.FIGHTER_PARAMETTER);
     }
 }

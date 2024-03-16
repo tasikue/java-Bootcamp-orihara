@@ -18,10 +18,10 @@ public enum EnumText {
     BATTLE_ATTACK_TEXT02("%s は %d のダメージを受けた！ \n"),
     BATTLE_ATTACK_MISS_TEXT("しかし こうげきは外れた！\n"),
     CRITICAL_TEXT("SMAAAAAAAAASH!!!! \n"),
-    HEEL_TEXT02("%s は HP %d まで回復した ！ \n"),
-    HEEL_TEXT03("MPが足りない！\n"),
+    HEEL_TEXT01("%s は HP %d まで回復した ！ \n"),
     DEAD_TEXT("%s は崩れて消滅した...\n"),
-    MAGIC_TEXT("%s は %s を唱えた！\n"),
+    MAGIC_TEXT01("%s は %s を唱えた！\n"),
+    MAGIC_TEXT02("MPが足りない！\n"),
     PLAYER_STATUS_TEXT("ジョブID: %d, HP: %d, MP: %d, 攻撃力: %d, 防御力: %d, 幸運度: %d, すばやさ: %d \n"),
     POISON_DAMAGE_TEXT("%s は %s のダメージを受けている ...！ \n"),
     PALIZE_TEXT("%s は %s で動けない ...！ \n");

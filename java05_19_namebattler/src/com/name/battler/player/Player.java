@@ -32,7 +32,7 @@ public abstract class Player implements Attack{
     // コンストラクタ
     public Player(int jobId){
         this.jobId = jobId;
-        condition = EnumCondition.NORMAL.getConditionName();
+        condition = EnumCondition.NORMAL.getName();
     }
 
     /** --- --- 共通setter & getter --- --- */
@@ -95,17 +95,17 @@ public abstract class Player implements Attack{
         switch(condition){
             // 毒状態
             case POISON: 
-                this.condition = EnumCondition.POISON.getConditionName();
+                this.condition = EnumCondition.POISON.getName();
             break;
 
             // 麻痺状態
             case PALIZE:
-                this.condition = EnumCondition.PALIZE.getConditionName();
+                this.condition = EnumCondition.PALIZE.getName();
             break;
 
             // 通常状態
             default:
-                this.condition = EnumCondition.NORMAL.getConditionName();
+                this.condition = EnumCondition.NORMAL.getName();
             break;
         }
     }
