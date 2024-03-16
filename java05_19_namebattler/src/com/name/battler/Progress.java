@@ -4,27 +4,38 @@ import java.util.Scanner;
 import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.name.battler.player.Player;
 import com.name.battler.player.enumplayer.EnumCondition;
 import com.name.battler.setting.JobManager;
+import com.name.battler.setting.PlayerJudge;
 import com.name.battler.setting.PlayerMaking;
 import com.name.battler.statustext.Dialogue;
 import com.name.battler.statustext.EnumText;
 
+/**
+ * ゲーム進行に関するクラス
+ */
 public class Progress {
 
     // 定数
+    /** 作成するプレイヤー数 */
     final int NAME_COUNT = 2;
-    final int FIRST_PLAYER = 0;
-    final int SECOND_PLAYER = 1;
+    /** プレイヤーインデックス */
+    final int FIRST_INDEX = 0;
+    final int SECOND_INDEX = 1;
+    /** 技の数の最大値（別のところから取得する？） */
     final int ACTION_COUNT_MAX = 4;
+    /** ランダムの定数 */
     final int RANDOM_HUNDRED = 100;
     final int PALIZE_RANDOM = 20;
 
-    Scanner scan;
-    Random ran;
-    List<Player> playerList = new ArrayList<>();
+    // 変数
+    private Scanner scan;
+    private Random ran;
+    private List<Player> playerList = new ArrayList<>();
+    private PlayerJudge pj = new PlayerJudge();
 
     /**
      * メイン進行
@@ -64,15 +75,10 @@ public class Progress {
         // 2. の最初のダイアログ
         Dialogue.showStartBattleText();
 
-        // 2体のプレイヤーの先攻後攻の順でorderPlayerに収納する
-        List<Player> orderPlayer = new ArrayList<>();
-
-        if(playerList.get(FIRST_PLAYER).getAgi() - playerList.get(SECOND_PLAYER).getAgi() >= 0){
-            orderPlayer.add(playerList.get(FIRST_PLAYER));
-            orderPlayer.add(playerList.get(SECOND_PLAYER));
-        } else {
-            orderPlayer.add(playerList.get(SECOND_PLAYER));
-            orderPlayer.add(playerList.get(FIRST_PLAYER));
+        // 2体のプレイヤーの先攻後攻の順でorderに収納する
+        List<Player> order = playerList;
+        if(order.get(FIRST_INDEX).getAgi() - order.get(SECOND_INDEX).getAgi() < 0){
+            Collections.reverse(order);
         }
 
 
@@ -83,34 +89,32 @@ public class Progress {
 
             // 技行使とダメージ判定: 麻痺の場合20%の確率で動けない
             boolean isPalize = false;
-            if(orderPlayer.get(FIRST_PLAYER).getCondition().equals(EnumCondition.PALIZE.getConditionName())){
-                System.out.printf(EnumText.PALIZE_TEXT.getText(), orderPlayer.get(FIRST_PLAYER).getName(), EnumCondition.PALIZE.getConditionName());
+            if(order.get(FIRST_INDEX).getCondition().equals(EnumCondition.PALIZE.getName())){
+                System.out.printf(EnumText.PALIZE_TEXT.getText(), order.get(FIRST_INDEX).getName(), EnumCondition.PALIZE.getName());
                 isPalize = ran.nextInt(RANDOM_HUNDRED) - PALIZE_RANDOM <= 0;
             }
 
             if(!isPalize){
                 // 技行動
-                int damage = orderPlayer.get(FIRST_PLAYER).selectAttack(ran.nextInt(ACTION_COUNT_MAX), orderPlayer.get(SECOND_PLAYER));
-                orderPlayer.get(SECOND_PLAYER).decreaseHp(damage);
+                int damage = order.get(FIRST_INDEX).selectAttack(ran.nextInt(ACTION_COUNT_MAX), order.get(SECOND_INDEX));
+                order.get(SECOND_INDEX).decreaseHp(damage);
             }
 
             // 状態異常判定: 攻撃したほうが毒状態の時ダメージを受ける
-            if(orderPlayer.get(FIRST_PLAYER).getCondition().equals(EnumCondition.POISON.getConditionName())){
-                System.out.printf(EnumText.POISON_DAMAGE_TEXT.getText(), orderPlayer.get(FIRST_PLAYER).getName(), EnumCondition.POISON.getConditionName());
-                orderPlayer.get(FIRST_PLAYER).decreaseHp(EnumCondition.POISON.getConditionDamage());
+            if(order.get(FIRST_INDEX).getCondition().equals(EnumCondition.POISON.getName())){
+                System.out.printf(EnumText.POISON_DAMAGE_TEXT.getText(), order.get(FIRST_INDEX).getName(), EnumCondition.POISON.getName());
+                order.get(FIRST_INDEX).decreaseHp(EnumCondition.POISON.getDamage());
             }
 
             // 死亡判定
-            if(orderPlayer.get(SECOND_PLAYER).isDead()){
+            if(pj.isDead(order.get(SECOND_INDEX))){
                 System.out.println();
-                System.out.printf(EnumText.DEAD_TEXT.getText(), orderPlayer.get(SECOND_PLAYER).getName());
+                System.out.printf(EnumText.DEAD_TEXT.getText(), order.get(SECOND_INDEX).getName());
                 break;
             }
 
             // 先攻後攻を入れ替える
-            Player tempPlayer = orderPlayer.get(FIRST_PLAYER);
-            orderPlayer.set(FIRST_PLAYER, orderPlayer.get(SECOND_PLAYER));
-            orderPlayer.set(SECOND_PLAYER, tempPlayer);
+            Collections.reverse(order);
         }
 
         // 2. の最後のダイアログ
@@ -120,8 +124,8 @@ public class Progress {
         /* --- 3. 締め --- */
         // 勝者の決定
         // ステータス表示
-        Dialogue.showStatusText(orderPlayer.get(FIRST_PLAYER));
-        Dialogue.showStatusText(orderPlayer.get(SECOND_PLAYER));
+        Dialogue.showStatusText(order.get(FIRST_INDEX));
+        Dialogue.showStatusText(order.get(SECOND_INDEX));
     }
 
 

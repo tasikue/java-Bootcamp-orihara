@@ -1,9 +1,9 @@
 package com.name.battler.player.job;
 
-import com.name.battler.player.AbilityRange;
 import com.name.battler.player.Player;
 import com.name.battler.player.enumplayer.EnumJob;
 import com.name.battler.player.enumplayer.EnumJobParameter;
+import com.name.battler.setting.AbilityRange;
 
 /**
  * 職業: 戦士クラス
@@ -11,7 +11,7 @@ import com.name.battler.player.enumplayer.EnumJobParameter;
 public class Fighter extends Player{
 
     /**
-     * コンストラクタ
+     * 職業の戦士を設定するコンストラクタ
      * 
      * ジョブID -> 0
      * ジョブ名 -> 戦士

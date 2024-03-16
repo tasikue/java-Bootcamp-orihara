@@ -1,4 +1,4 @@
-package com.name.battler.player;
+package com.name.battler.setting;
 
 import com.name.battler.player.enumplayer.EnumJobParameter;
 

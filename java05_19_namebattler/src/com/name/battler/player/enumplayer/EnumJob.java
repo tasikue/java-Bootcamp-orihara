@@ -6,16 +6,23 @@ package com.name.battler.player.enumplayer;
 public enum EnumJob {
     
     // 定数
+    /** 戦士 */
     FIGHTER(0, "戦士"),
+    /** 魔法使い */
     WIZARD(1, "魔法使い"),
-    PRIEST(2, "僧侶");
+    /** 僧侶 */
+    PRIEST(2, "僧侶"),
+    /** 勇者 */
+    HERO(3, "勇者");
 
     // 変数
-    int id;
-    String name;
+    /** ジョブID */
+    private int id;
+    /** ジョブ名 */
+    private String name;
 
     /**
-     * ジョブのIDとジョブ名を入力するコンストラクタ
+     * ジョブのIDと名前を入力するコンストラクタ
      * @param id ID
      * @param name ジョブ名
      */
@@ -26,7 +33,7 @@ public enum EnumJob {
 
     /** --- メソッド ---*/
     /**
-     * ジョブIDを出力する処理
+     * ジョブIDを取得する処理
      * @return ジョブID
      */
     public int getId(){
@@ -34,7 +41,7 @@ public enum EnumJob {
     }
 
     /**
-     * ジョブの名前を出力する処理
+     * ジョブの名前を取得する処理
      * @return ジョブの名前
      */
     public String getName(){

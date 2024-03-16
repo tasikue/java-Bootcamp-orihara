@@ -1,5 +1,8 @@
 package com.name.battler.statustext;
 
+/**
+ *  表示するテキストを定数で保持する列挙型
+ */
 public enum EnumText {
     
     // 列挙
@@ -26,12 +29,21 @@ public enum EnumText {
     POISON_DAMAGE_TEXT("%s は %s のダメージを受けている ...！ \n"),
     PALIZE_TEXT("%s は %s で動けない ...！ \n");
 
+    // 変数
     private String text;
 
+    /**
+     * テキストを入力するコンストラクタ
+     * @param text テキスト
+     */
     EnumText(String text){
         this.text = text;
     }
 
+    /**
+     * テキストを取得する処理
+     * @return テキスト
+     */
     public String getText(){
         return this.text;
     }

@@ -1,34 +1,17 @@
 package com.name.battler.player.job;
 
-import java.util.Random;
-
-import com.name.battler.player.AbilityRange;
 import com.name.battler.player.Player;
 import com.name.battler.player.action.Fire;
 import com.name.battler.player.action.Thunder;
-import com.name.battler.player.enumplayer.EnumAction;
-import com.name.battler.player.enumplayer.EnumJob;
-import com.name.battler.player.enumplayer.EnumJobParameter;
+import com.name.battler.player.enumplayer.*;
+import com.name.battler.setting.AbilityRange;
+import com.name.battler.statustext.Dialogue;
 import com.name.battler.statustext.EnumText;
 
 /**
  * 職業: 魔法使い
  */
 public class Wizard extends Player implements Fire, Thunder {
-
-    // 技ID
-    final int FIRE_ID = 1;
-    final int THUNDER_ID = 2;
-
-    // 技の固定値
-    final int FIRE_MP_COST = 10;
-    final int FIRE_DAMAGE_MAX = 30;
-    final int FIRE_DAMAGE_MIN = 10;
-    final int THUNDER_MP_COST = 20;
-    final int THUNDER_DAMAGE_MAX = 30;
-    final int THUNDER_DAMAGE_MIN = 10;
-
-    Random ran = new Random();
 
     /**
      * コンストラクタ
@@ -45,53 +28,69 @@ public class Wizard extends Player implements Fire, Thunder {
     }
 
     /**
-     * サンダー
+     * サンダーを唱える処理
+     * @return 与えるダメージ
      */
     @Override
     public int doThunderAttack() {
-        // MP消費
-        super.canActionDecreaseMp(THUNDER_MP_COST);
-        // ダメージ値をランダムで返す
-        return ran.nextInt(THUNDER_DAMAGE_MAX - THUNDER_DAMAGE_MIN) + THUNDER_DAMAGE_MIN;
+        int cost = EnumAction.THUNDER.getCost();
+
+        // 魔法が使えるかの判定
+        if(super.pj.canUseMagic(this, cost)){
+            // MPを消費
+            super.decreaseMp(cost);
+            // ダメージ値をランダムで返す
+            return EnumAction.THUNDER.getDamageRange().getRandomValue();
+        }
+
+        // 魔法が使えないテキスト
+        System.out.printf(EnumText.MAGIC_TEXT02.getText());
+        return 0;
     }
 
     /**
-     * ファイヤー
+     * ファイヤーを唱える処理
      */
     @Override
     public int doFireAttack() {
-        // MP消費
-        super.canActionDecreaseMp(FIRE_MP_COST);
-        // ダメージ値をランダムで返す
-        return ran.nextInt(FIRE_DAMAGE_MAX - FIRE_DAMAGE_MIN) + FIRE_DAMAGE_MIN;
+        int cost = EnumAction.FIRE.getCost();
+
+        // 魔法が使えるかの判定
+        if(super.pj.canUseMagic(this, cost)){
+            // MPを消費
+            super.decreaseMp(cost);
+            // ダメージ値をランダムで返す
+            return EnumAction.FIRE.getDamageRange().getRandomValue();
+        }
+
+        // 魔法が使えないテキスト
+        System.out.printf(EnumText.MAGIC_TEXT02.getText());
+        return 0;
     }
 
     /**
-     * 魔法使いの技を追加
+     * 魔法使いの技を実行する処理
+     * 0(それ以外) -> layerクラスの通常攻撃を実行
+     * 1 -> ファイヤーの技
+     * 2 -> サンダーの技
      */
     @Override
     public int selectAttack(int attackId, Player player){
         int damage;
 
         switch (attackId) {
-            // ファイヤーの技
-            case FIRE_ID:
+            case 1:
             damage = doThunderAttack();
 
             // ダメージテキスト
-            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.FIRE.getName());
-            System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
-
+            Dialogue.showDamageText(this.name, EnumAction.FIRE.getName(), player.getName(), damage);
             return damage;
 
-            // サンダーの技
-            case THUNDER_ID:
+            case 2:
             damage = doFireAttack();
 
             // ダメージテキスト
-            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.THUNDER.getName());
-            System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
-
+            Dialogue.showDamageText(this.name, EnumAction.THUNDER.getName(), player.getName(), damage);
             return damage;
         }
 

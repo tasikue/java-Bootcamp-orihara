@@ -6,17 +6,23 @@ package com.name.battler.player.enumplayer;
 public enum EnumCondition {
     
     // 定数
-    NORMAL(0, "元気", 0), // 通常状態
-    POISON(1, "どく", 20), // どく状態 
-    PALIZE(2, "麻痺", 0); // まひ状態
+    /** 通常状態 */
+    NORMAL(0, "元気", 0),
+    /** どく状態 */
+    POISON(1, "どく", 20),
+    /** まひ状態 */
+    PALIZE(2, "麻痺", 0);
 
     // 変数
-    int id;
-    String name;
-    int damage;
+    /** 状態異常ID */
+    private int id;
+    /** 状態異常名 */
+    private String name;
+    /** 状態異常によるダメージ */
+    private int damage;
 
     /**
-     * 状態異常のIDと状態異常名と状態異常で受けるダメージを入力する
+     * 状態異常のIDと名前と受けるダメージを入力するコンストラクタ
      * @param id ID
      * @param name 状態異常名
      * @param damage 状態異常によるダメージ
@@ -29,7 +35,7 @@ public enum EnumCondition {
 
     /** --- メソッド --- */
     /**
-     * 状態異常のIDを出力する処理
+     * 状態異常のIDを取得する処理
      * @return 状態異常のID
      */
     public int getId(){
@@ -37,7 +43,7 @@ public enum EnumCondition {
     }
 
     /**
-     * 状態異常の名前を出力する処理
+     * 状態異常の名前を取得する処理
      * @return 状態異常の名前
      */
     public String getName(){
@@ -45,7 +51,7 @@ public enum EnumCondition {
     }
 
     /**
-     * 状態異常のダメージを出力する処理
+     * 状態異常のダメージを取得する処理
      * @return 状態異常のダメージ
      */
     public int getDamage(){
