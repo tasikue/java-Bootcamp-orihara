@@ -9,6 +9,8 @@ public enum EnumText {
     START_SETTING_TEXT_01("2体の魔物を生み出した ...!"),
     START_SETTING_TEXT_02("名前を付けてあげよう!"),
     CREATE_PLAYER_NAME_ATTENTION_TEXT("もう一度入力してください"),
+    SELECT_JOB_ATTENTION_TEXT01("数字で入力してください"),
+    SELECT_JOB_ATTENTION_TEXT02("表記してある数字を入力してください"),
     NAME_PUT_TEXT("%d 体目の名前は... "),
     LINE_TEXT("------------------------------"),
     STATUS_TEXT_01("%s \n"),
@@ -27,7 +29,7 @@ public enum EnumText {
     MAGIC_TEXT02("MPが足りない！\n"),
     PLAYER_STATUS_TEXT("ジョブID: %d, HP: %d, MP: %d, 攻撃力: %d, 防御力: %d, 幸運度: %d, すばやさ: %d \n"),
     POISON_DAMAGE_TEXT("%s は %s のダメージを受けている ...！ \n"),
-    PALIZE_TEXT("%s は %s で動けない ...！ \n");
+    PALIZE_TEXT("%s は %s で苦しんでいる ...！ \n");
 
     // 変数
     private String text;

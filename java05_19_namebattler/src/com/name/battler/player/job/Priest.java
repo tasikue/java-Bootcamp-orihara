@@ -13,6 +13,12 @@ import com.name.battler.statustext.EnumText;
  */
 public class Priest extends Player implements Heel, Palize, Poison {
     
+    // 定数
+    /** 行動パターン番号 */
+    private final int ACTION_ONE = 1;
+    private final int ACTION_TWO = 2;
+    private final int ACTION_THREE = 3;
+
     /**
      * 職業の僧侶を設定するコンストラクタ
      * 
@@ -38,7 +44,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
-            super.decreaseMp(cost);
+            this.decreaseMp(cost);
             player.setCondition(EnumCondition.POISON);
         } else {
             // 使えなかったときのテキスト
@@ -56,7 +62,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
-            super.decreaseMp(cost);
+            this.decreaseMp(cost);
             player.setCondition(EnumCondition.PALIZE);
         } else {
             // 使えなかった時のテキスト
@@ -74,7 +80,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
-            super.decreaseMp(cost);
+            this.decreaseMp(cost);
             this.decreaseHp(EnumAction.HEEL.getDamageRange().getRandomValue());
 
             System.out.printf(EnumText.HEEL_TEXT01.getText(), this.getName(), this.getHp());
@@ -94,7 +100,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
     @Override
     public int selectAttack(int attackId, Player player){
         switch (attackId) {
-            case 1:
+            case ACTION_ONE:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(),
                     this.getName(),
@@ -104,7 +110,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
                 this.doPoisonState(player);
             return 0;
 
-            case 2:
+            case ACTION_TWO:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(), 
                     this.getName(), 
@@ -114,7 +120,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
                 this.doPalizeState(player);
             return 0;
             
-            case 3:
+            case ACTION_THREE:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(), 
                     this.getName(), 

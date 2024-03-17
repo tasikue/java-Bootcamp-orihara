@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.name.battler.player.Player;
+import com.name.battler.player.enumplayer.EnumAction;
 import com.name.battler.player.enumplayer.EnumCondition;
+import com.name.battler.player.enumplayer.EnumJob;
 import com.name.battler.setting.JobManager;
 import com.name.battler.setting.PlayerJudge;
 import com.name.battler.setting.PlayerMaking;
@@ -25,16 +27,20 @@ public class Progress {
     /** プレイヤーインデックス */
     final int FIRST_INDEX = 0;
     final int SECOND_INDEX = 1;
-    /** 技の数の最大値（別のところから取得する？） */
+    /** 技の数の最大値 */
     final int ACTION_COUNT_MAX = 4;
     /** ランダムの定数 */
     final int RANDOM_HUNDRED = 100;
     final int PALIZE_RANDOM = 20;
 
     // 変数
+    /** 入力用 */
     private Scanner scan;
+    /** ランダム用 */
     private Random ran;
+    /** 作成したプレイヤークラスを格納するリスト */
     private List<Player> playerList = new ArrayList<>();
+    /** 判定用 */
     private PlayerJudge pj = new PlayerJudge();
 
     /**
@@ -81,7 +87,6 @@ public class Progress {
             Collections.reverse(order);
         }
 
-
         // 戦闘ループ 
         while(true){
             // 技をランダムで仕込む
@@ -95,8 +100,26 @@ public class Progress {
             }
 
             if(!isPalize){
+                // 優先行動選択
+                int actionId = ran.nextInt(ACTION_COUNT_MAX);
+                // 魔法使いはMPがあるとき呪文優先
+                if(order.get(FIRST_INDEX).getJobId() == EnumJob.WIZARD.getId()){
+                    if(order.get(FIRST_INDEX).getMp() >= EnumAction.THUNDER.getCost()){
+                        // random 1-2
+                        actionId = ran.nextInt(2)+1;
+                    }
+                }
+
+                // 僧侶はダメージがあると回復優先
+                if(order.get(FIRST_INDEX).getJobId() == EnumJob.PRIEST.getId()){
+                    if(order.get(FIRST_INDEX).getHp() <= -(EnumAction.HEEL.getDamageRange().getRandomValue())){
+                        // 僧侶の回復行動3
+                        actionId = 3;
+                    }
+                }
+
                 // 技行動
-                int damage = order.get(FIRST_INDEX).selectAttack(ran.nextInt(ACTION_COUNT_MAX), order.get(SECOND_INDEX));
+                int damage = order.get(FIRST_INDEX).selectAttack(actionId, order.get(SECOND_INDEX));
                 order.get(SECOND_INDEX).decreaseHp(damage);
             }
 
@@ -134,25 +157,21 @@ public class Progress {
      * @return プレイヤーネーム
      */
     private String createPlayerName(){
-        // 日本語入力文字化け対策 Shift-JIS or UTF-8
+        // 日本語入力文字化け対策 Shift-JIS
         scan = new Scanner(System.in, "Shift-JIS");
 
         // 変数
-        boolean isValidInput = false;
         String playerName = "";
 
         // 名前を入力（例外の場合やり直す）
-        while(!isValidInput){
-            try{
+        while(true){
+            if(scan.hasNextLine()){
                 // 名前を入力させ成功したら抜ける
                 playerName = scan.nextLine();
                 break;
-            } catch (Exception e){
-
-                // 例外の場合, エラーメッセージをだしもう一度入力させる
-                System.out.println(e);
+            } else {
+                // もう一度入力させる
                 System.out.println(EnumText.CREATE_PLAYER_NAME_ATTENTION_TEXT.getText());
-
                 scan.nextLine();
             }
         }
@@ -165,15 +184,13 @@ public class Progress {
      * @return ジョブID
      */
     private int selectJobId(){
-        // 日本語入力文字化け対策 Shift-JIS or UTF-8
+        // 日本語入力文字化け対策 Shift-JIS
         scan = new Scanner(System.in, "Shift-JIS");
 
         // 全ジョブを出力
         JobManager jm = new JobManager();
-        int jobCount = 0;
         for(Player job : jm.getJobList()){
             System.out.printf("%s: %d  ", job.getJobName(), job.getJobId());
-            jobCount++;
         }
 
         // 変数
@@ -182,23 +199,20 @@ public class Progress {
 
         // 名前を入力（例外の場合やり直す）
         while(!isValidInput){
-
-            try{
+            if(scan.hasNextInt()){
                 // 名前を入力させ成功したら抜ける
                 jobId = scan.nextInt();
 
-                // ジョブが指定数以上のときエラーを吐く
-                if(jobId >= jobCount){
-                    throw new Exception();
+                // ジョブが指定数以内で確定
+                if(jobId < jm.getJobList().size()){
+                    isValidInput = true;
+                } else {
+                    // エラーメッセージ
+                    System.out.println(EnumText.SELECT_JOB_ATTENTION_TEXT02.getText());
                 }
-
-                break;
-            } catch (Exception e){
-
-                // 例外の場合, エラーメッセージをだしもう一度入力させる
-                System.out.println(e);
-                System.out.println(EnumText.CREATE_PLAYER_NAME_ATTENTION_TEXT.getText());
-
+            } else {
+                // エラーメッセージをだしもう一度入力させる
+                System.out.println(EnumText.SELECT_JOB_ATTENTION_TEXT01.getText());
                 scan.nextLine();
             }
         }

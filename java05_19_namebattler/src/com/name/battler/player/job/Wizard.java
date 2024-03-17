@@ -5,13 +5,17 @@ import com.name.battler.player.action.Fire;
 import com.name.battler.player.action.Thunder;
 import com.name.battler.player.enumplayer.*;
 import com.name.battler.setting.AbilityRange;
-import com.name.battler.statustext.Dialogue;
 import com.name.battler.statustext.EnumText;
 
 /**
  * 職業: 魔法使い
  */
 public class Wizard extends Player implements Fire, Thunder {
+
+    // 定数
+    /** 行動パターン番号 */
+    private final int ACTION_ONE = 1;
+    private final int ACTION_TWO = 2;
 
     /**
      * コンストラクタ
@@ -38,7 +42,7 @@ public class Wizard extends Player implements Fire, Thunder {
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
-            super.decreaseMp(cost);
+            this.decreaseMp(cost);
             // ダメージ値をランダムで返す
             return EnumAction.THUNDER.getDamageRange().getRandomValue();
         }
@@ -58,7 +62,7 @@ public class Wizard extends Player implements Fire, Thunder {
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
-            super.decreaseMp(cost);
+            this.decreaseMp(cost);
             // ダメージ値をランダムで返す
             return EnumAction.FIRE.getDamageRange().getRandomValue();
         }
@@ -79,18 +83,24 @@ public class Wizard extends Player implements Fire, Thunder {
         int damage;
 
         switch (attackId) {
-            case 1:
+            case ACTION_ONE:
+            System.out.format(EnumText.MAGIC_TEXT01.getText(), this.name, EnumAction.FIRE.getName());
             damage = doThunderAttack();
 
             // ダメージテキスト
-            Dialogue.showDamageText(this.name, EnumAction.FIRE.getName(), player.getName(), damage);
+            if(damage != 0){
+                System.out.format(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
+            }
             return damage;
 
-            case 2:
+            case ACTION_TWO:
+            System.out.format(EnumText.MAGIC_TEXT01.getText(), this.name, EnumAction.FIRE.getName());
             damage = doFireAttack();
 
             // ダメージテキスト
-            Dialogue.showDamageText(this.name, EnumAction.THUNDER.getName(), player.getName(), damage);
+            if(damage != 0){
+                System.out.format(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
+            }
             return damage;
         }
 

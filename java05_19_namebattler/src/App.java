@@ -6,7 +6,7 @@ import com.name.battler.Progress;
 public class App {
 
     public static void main(String[] args) throws Exception {
-        
+
         Progress progress = new Progress();
         
         progress.mainProgress();

@@ -33,12 +33,6 @@ public class Dialogue {
         messageln(EnumText.BATTLE_START_TEXT_02.getText());
     }
 
-    /** 戦闘のダメージテキスト */
-    public static void showDamageText(String myName, String ActionName, String yourName, int damage){
-        System.out.format(EnumText.MAGIC_TEXT01.getText(), myName, ActionName);
-        System.out.format(EnumText.BATTLE_ATTACK_TEXT02.getText(), yourName, damage); 
-    }
-
     /**
      * テキストを出力する処理
      * @param text テキスト

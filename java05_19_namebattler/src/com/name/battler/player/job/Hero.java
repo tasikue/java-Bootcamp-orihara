@@ -12,6 +12,10 @@ import com.name.battler.statustext.EnumText;
  * 職業: 勇者
  */
 public class Hero extends Player implements Heel{
+
+    // 定数
+    /** 行動パターン番号 */
+    private final int ACTION_ONE = 1;
     
     /**
      * 職業の勇者を設定するコンストラクタ
@@ -55,7 +59,7 @@ public class Hero extends Player implements Heel{
     @Override
     public int selectAttack(int attackId, Player player){
         switch (attackId) {
-            case 1:
+            case ACTION_ONE:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(), 
                     this.getName(), 
