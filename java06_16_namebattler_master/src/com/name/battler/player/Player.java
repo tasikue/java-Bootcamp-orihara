@@ -1,9 +1,9 @@
 package com.name.battler.player;
 
-import java.util.Random;
-
 import com.name.battler.player.action.Attack;
 import com.name.battler.player.enumplayer.EnumCondition;
+import com.name.battler.setting.AbilityRange;
+import com.name.battler.setting.PlayerJudge;
 import com.name.battler.statustext.EnumText;
 
 /**
@@ -11,31 +11,43 @@ import com.name.battler.statustext.EnumText;
  */
 public abstract class Player implements Attack{
 
-    // 職業別パラメータ
-    protected AbilityRange abilityRange;
-
-    // 定数
-    final int RANDOM_MAX = 100;
-
     // プレイヤーステータス
-    protected int jobId; // ジョブのID
-    protected String name; // キャラの名前
-    protected String jobName; // ジョブの名前
-    protected int hp; // キャラのHP
-    protected int mp; // キャラのMP
-    protected int str; // キャラの攻撃力
-    protected int def; // キャラの防御力
-    protected int luck; // キャラの幸福度
-    protected int agi; // キャラの素早さ
-    protected String condition; // キャラの状態異常
+    /** ジョブID */
+    protected int jobId;
+    /** キャラの名前 */
+    protected String name;
+    /** ジョブの名前 */
+    protected String jobName;
+    /** キャラのHP */
+    protected int hp;
+    /** キャラのMP */
+    protected int mp;
+    /** キャラの攻撃力 */
+    protected int str;
+    /** キャラの防御力 */
+    protected int def;
+    /** キャラの幸福度 */
+    protected int luck;
+    /** キャラの素早さ */
+    protected int agi;
+    /** キャラの状態異常 */
+    protected String condition;
+    /** 所属するパーティナンバー */
+    protected int partyNumber;
+
+    /** 職業別パラメータ */
+    protected AbilityRange abilityRange;
+    /** 判定メソッド用 */
+    protected PlayerJudge pj = new PlayerJudge();
+
 
     // コンストラクタ
     public Player(int jobId){
         this.jobId = jobId;
-        condition = EnumCondition.NORMAL.getConditionName();
+        condition = EnumCondition.NORMAL.getName();
     }
 
-    /** --- --- 共通setter & getter --- --- */
+    /** --- --- 共通getter --- --- */
     /** --- @return それぞれの能力値範囲 --- */
     public AbilityRange getAbilityRange(){
         return abilityRange;
@@ -86,32 +98,8 @@ public abstract class Player implements Attack{
         return this.agi;
     }
 
-    /** --- 状態異常 --- */
     /**
-     * 列挙型のEnumConditionクラスにより状態異常を設定する処理
-     * @param condition
-     */
-    public void setCondition(EnumCondition condition){
-        switch(condition){
-            // 毒状態
-            case POISON: 
-                this.condition = EnumCondition.POISON.getConditionName();
-            break;
-
-            // 麻痺状態
-            case PALIZE:
-                this.condition = EnumCondition.PALIZE.getConditionName();
-            break;
-
-            // 通常状態
-            default:
-                this.condition = EnumCondition.NORMAL.getConditionName();
-            break;
-        }
-    }
-
-    /**
-     * プレイヤーの状態異常を得る処理
+     * プレイヤーの状態異常を取得する処理
      * @return 状態異常名
      */
     public String getCondition(){
@@ -138,14 +126,17 @@ public abstract class Player implements Attack{
         this.agi = agi;
     }
 
-    /**
-     * すべてのステータスを表示
-     */
-    public void showAllStatus(){
-        System.out.printf(EnumText.PLAYER_STATUS_TEXT.getText(),
-            this.jobId, this.hp, this.mp, this.str, this.def, this.luck, this.agi
-         );
+    /** パーティナンバーをセット */
+    public void setPartyNumber(int partyNumber){
+        this.partyNumber = partyNumber;
     }
+
+    /** パーティナンバーを取得 */
+    public int getPartyNumber(){
+        return this.partyNumber;
+    }
+
+
 
     /** --- --- 共通行動 --- --- */
     /**
@@ -162,35 +153,12 @@ public abstract class Player implements Attack{
         }
 
         // 会心の一撃判定
-        if(isCritical(this.luck)){
+        if(pj.isCritical(this.luck)){
             System.out.printf(EnumText.CRITICAL_TEXT.getText());
             damage = this.str;
         }
 
         return damage;
-    }
-
-    /**
-     * 会心の一撃かどうかを判定する処理
-     * @param luck 幸運度
-     * @return 会心の一撃か
-     */
-    private boolean isCritical(int luck){
-        Random ran = new Random();
-
-        return luck - ran.nextInt(RANDOM_MAX)+1 > 0;
-    }
-
-    /**
-     * MPを消費して魔法が使えるかどうか
-     * @return 魔法が使えるか
-     */
-    protected boolean canActionDecreaseMp(int cost){
-        if (this.mp >= cost){
-            this.mp = this.mp - cost;
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -226,11 +194,18 @@ public abstract class Player implements Attack{
     }
 
     /**
-     * HPを見て死亡判定
-     * @return 死んだかどうか
+     * MPを消費する処理
+     * @param cost 消費するMPコスト
      */
-    public boolean isDead(){
-        return this.hp <= 0;
+    protected void decreaseMp(int cost){
+        this.mp = this.mp - cost;
     }
-    
+
+    /**
+     * プレイヤーの状態異常を設定する処理
+     * @param condition
+     */
+    public void setCondition(EnumCondition condition){
+        this.condition = pj.getCondition(condition);
+    }
 }

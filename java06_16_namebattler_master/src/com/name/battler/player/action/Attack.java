@@ -5,5 +5,5 @@ import com.name.battler.player.Player;
 public interface Attack {
     
     // 通常攻撃をする
-    int doNormalAttack(Player player);
+    public int doNormalAttack(Player player);
 }

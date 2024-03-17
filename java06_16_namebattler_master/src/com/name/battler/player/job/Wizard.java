@@ -1,106 +1,106 @@
 package com.name.battler.player.job;
 
-import java.util.Random;
-
-import com.name.battler.player.AbilityRange;
 import com.name.battler.player.Player;
 import com.name.battler.player.action.Fire;
 import com.name.battler.player.action.Thunder;
-import com.name.battler.player.enumplayer.EnumAction;
+import com.name.battler.player.enumplayer.*;
+import com.name.battler.setting.AbilityRange;
 import com.name.battler.statustext.EnumText;
 
 /**
  * 職業: 魔法使い
- * job id: 1
  */
 public class Wizard extends Player implements Fire, Thunder {
 
-    final static int JOB_ID = 1;
+    // 定数
+    /** 行動パターン番号 */
+    private final int ACTION_ONE = 1;
+    private final int ACTION_TWO = 2;
 
-    // 技ID
-    final int FIRE_ID = 1;
-    final int THUNDER_ID = 2;
-
-    // 技の固定値
-    final int FIRE_MP_COST = 10;
-    final int FIRE_DAMAGE_MAX = 30;
-    final int FIRE_DAMAGE_MIN = 10;
-    final int THUNDER_MP_COST = 20;
-    final int THUNDER_DAMAGE_MAX = 30;
-    final int THUNDER_DAMAGE_MIN = 10;
-
-    Random ran = new Random();
-
-    // コンストラクタ
+    /**
+     * コンストラクタ
+     * 
+     * ジョブID -> 1
+     * ジョブ名 -> 魔法使い
+     * ジョブパラメータ -> 魔法使いのパラメータ
+     */
     public Wizard(){
-        super(JOB_ID);
-        jobName = "魔法使い";
+        super(EnumJob.WIZARD.getId());
 
-        // 職業別パラメータ（固定値）
-        abilityRange = new AbilityRange(
-                        150,
-                        50,
-                        80,
-                        30,
-                        50,
-                        1,
-                        50,
-                        1,
-                        100,
-                        1,
-                        60,
-                        20
-                    );
+        jobName = EnumJob.WIZARD.getName();
+        abilityRange = new AbilityRange(EnumJobParameter.WIZARD_PARAMETTER);
     }
 
     /**
-     * サンダー
+     * サンダーを唱える処理
+     * @return 与えるダメージ
      */
     @Override
     public int doThunderAttack() {
-        // MP消費
-        super.canActionDecreaseMp(THUNDER_MP_COST);
-        // ダメージ値をランダムで返す
-        return ran.nextInt(THUNDER_DAMAGE_MAX - THUNDER_DAMAGE_MIN) + THUNDER_DAMAGE_MIN;
+        int cost = EnumAction.THUNDER.getCost();
+
+        // 魔法が使えるかの判定
+        if(super.pj.canUseMagic(this, cost)){
+            // MPを消費
+            this.decreaseMp(cost);
+            // ダメージ値をランダムで返す
+            return EnumAction.THUNDER.getDamageRange().getRandomValue();
+        }
+
+        // 魔法が使えないテキスト
+        System.out.printf(EnumText.MAGIC_TEXT02.getText());
+        return 0;
     }
 
     /**
-     * ファイヤー
+     * ファイヤーを唱える処理
      */
     @Override
     public int doFireAttack() {
-        // MP消費
-        super.canActionDecreaseMp(FIRE_MP_COST);
-        // ダメージ値をランダムで返す
-        return ran.nextInt(FIRE_DAMAGE_MAX - FIRE_DAMAGE_MIN) + FIRE_DAMAGE_MIN;
+        int cost = EnumAction.FIRE.getCost();
+
+        // 魔法が使えるかの判定
+        if(super.pj.canUseMagic(this, cost)){
+            // MPを消費
+            this.decreaseMp(cost);
+            // ダメージ値をランダムで返す
+            return EnumAction.FIRE.getDamageRange().getRandomValue();
+        }
+
+        // 魔法が使えないテキスト
+        System.out.printf(EnumText.MAGIC_TEXT02.getText());
+        return 0;
     }
 
     /**
-     * 魔法使いの技を追加
+     * 魔法使いの技を実行する処理
+     * 0(それ以外) -> layerクラスの通常攻撃を実行
+     * 1 -> ファイヤーの技
+     * 2 -> サンダーの技
      */
     @Override
     public int selectAttack(int attackId, Player player){
         int damage;
 
         switch (attackId) {
-            // ファイヤーの技
-            case FIRE_ID:
+            case ACTION_ONE:
+            System.out.format(EnumText.MAGIC_TEXT01.getText(), this.name, EnumAction.FIRE.getName());
             damage = doThunderAttack();
 
             // ダメージテキスト
-            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.FIRE.getActionName());
-            System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
-
+            if(damage != 0){
+                System.out.format(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
+            }
             return damage;
 
-            // サンダーの技
-            case THUNDER_ID:
+            case ACTION_TWO:
+            System.out.format(EnumText.MAGIC_TEXT01.getText(), this.name, EnumAction.FIRE.getName());
             damage = doFireAttack();
 
             // ダメージテキスト
-            System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.THUNDER.getActionName());
-            System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
-
+            if(damage != 0){
+                System.out.format(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
+            }
             return damage;
         }
 

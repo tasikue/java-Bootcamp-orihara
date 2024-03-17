@@ -1,108 +1,131 @@
 package com.name.battler.player.job;
 
-import com.name.battler.player.AbilityRange;
 import com.name.battler.player.Player;
 import com.name.battler.player.action.Heel;
 import com.name.battler.player.action.Palize;
 import com.name.battler.player.action.Poison;
-import com.name.battler.player.enumplayer.EnumAction;
-import com.name.battler.player.enumplayer.EnumCondition;
+import com.name.battler.player.enumplayer.*;
+import com.name.battler.setting.AbilityRange;
 import com.name.battler.statustext.EnumText;
 
 /**
  * 職業: 僧侶
- * job id: 2 
  */
 public class Priest extends Player implements Heel, Palize, Poison {
-
-    final static int JOB_ID = 2;
-
-    // 技ID
-    final int POSION_ID = 1;
-    final int PALIZE_ID = 2;
-    final int HEEL_ID = 3;
-
-    // 技の固定値
-    final int HEEL_MP_COST = 20;
-    final int HEEL_RECOVERY_QUANTITY = -50;
     
-    public Priest(){
-        super(JOB_ID);
-        jobName = "僧侶";
-
-        // 職業別パラメータ（固定値）
-        abilityRange = new AbilityRange(
-                        200, 
-                        80, 
-                        50, 
-                        20, 
-                        70, 
-                        10, 
-                        70, 
-                        10, 
-                        100, 
-                        1, 
-                        60, 
-                        20
-                    );
-    }
+    // 定数
+    /** 行動パターン番号 */
+    private final int ACTION_ONE = 1;
+    private final int ACTION_TWO = 2;
+    private final int ACTION_THREE = 3;
 
     /**
-     * 相手を毒状態にする
+     * 職業の僧侶を設定するコンストラクタ
+     * 
+     * ジョブID -> 2
+     * ジョブ名 -> 僧侶
+     * ジョブパラメータ -> 僧侶のパラメータ
+     */
+    public Priest(){
+        super(EnumJob.PRIEST.getId());
+
+        jobName = EnumJob.PRIEST.getName();
+        abilityRange = new AbilityRange(EnumJobParameter.PRIEST_PARAMETTER);
+    }
+
+    /* --- メソッド --- */
+    /**
+     * 相手を毒状態にする処理
      */
     @Override
     public void doPoisonState(Player player) {
-        player.setCondition(EnumCondition.POISON);
-    }
+        int cost = EnumAction.POISON.getCost();
 
-    /**
-     * 相手を麻痺状態にする
-     */
-    @Override
-    public void doPalizeState(Player player) {
-        player.setCondition(EnumCondition.PALIZE);
-    }
-
-    /**
-     * ヒールを唱える
-     */
-    @Override
-    public void doHeel() {
-        if(super.canActionDecreaseMp(HEEL_MP_COST)){
-            this.decreaseHp(HEEL_RECOVERY_QUANTITY);
-
-            System.out.printf(EnumText.HEEL_TEXT02.getText(), this.getName(), this.getHp());
+        // 魔法が使えるかの判定
+        if(super.pj.canUseMagic(this, cost)){
+            // MPを消費
+            this.decreaseMp(cost);
+            player.setCondition(EnumCondition.POISON);
         } else {
-            System.out.printf(EnumText.HEEL_TEXT03.getText());
+            // 使えなかったときのテキスト
+            System.out.printf(EnumText.MAGIC_TEXT02.getText());
         }
     }
 
     /**
-     * 僧侶の技を追加
+     * 相手を麻痺状態にする処理
+     */
+    @Override
+    public void doPalizeState(Player player) {
+        int cost = EnumAction.PALIZE.getCost();
+
+        // 魔法が使えるかの判定
+        if(super.pj.canUseMagic(this, cost)){
+            // MPを消費
+            this.decreaseMp(cost);
+            player.setCondition(EnumCondition.PALIZE);
+        } else {
+            // 使えなかった時のテキスト
+            System.out.printf(EnumText.MAGIC_TEXT02.getText());
+        }
+    }
+
+    /**
+     * ヒールを唱える処理
+     */
+    @Override
+    public void doHeel() {
+        int cost = EnumAction.HEEL.getCost();
+
+        // 魔法が使えるかの判定
+        if(super.pj.canUseMagic(this, cost)){
+            // MPを消費
+            this.decreaseMp(cost);
+            this.decreaseHp(EnumAction.HEEL.getDamageRange().getRandomValue());
+
+            System.out.printf(EnumText.HEEL_TEXT01.getText(), this.getName(), this.getHp());
+        } else {
+            // 使えなかった時のテキスト
+            System.out.printf(EnumText.MAGIC_TEXT02.getText());
+        }
+    }
+
+    /**
+     * 僧侶の技を実装する処理
+     * 0(それ以外) => playerクラスの通常攻撃を実行
+     * 1 -> 相手を毒にする魔法を実行
+     * 2 -> 相手を麻痺にする魔法を実行
+     * 3 -> 自身を回復する魔法を実行
      */
     @Override
     public int selectAttack(int attackId, Player player){
         switch (attackId) {
-            // 相手を毒にする
-            case POSION_ID:
-                // テキスト
-                System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.POISON.getActionName());
+            case ACTION_ONE:
+                System.out.printf(
+                    EnumText.MAGIC_TEXT01.getText(),
+                    this.getName(),
+                    EnumAction.POISON.getName());
+                
                 // 実行
                 this.doPoisonState(player);
             return 0;
 
-            // 相手を麻痺にする
-            case PALIZE_ID:
-                // テキスト
-                System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.PALIZE.getActionName());
+            case ACTION_TWO:
+                System.out.printf(
+                    EnumText.MAGIC_TEXT01.getText(), 
+                    this.getName(), 
+                    EnumAction.PALIZE.getName());
+                
                 // 実行
                 this.doPalizeState(player);
             return 0;
             
-            // 自身を回復する
-            case HEEL_ID:
-                // テキスト
-                System.out.printf(EnumText.MAGIC_TEXT.getText(), this.getName(), EnumAction.HEEL.getActionName());
+            case ACTION_THREE:
+                System.out.printf(
+                    EnumText.MAGIC_TEXT01.getText(), 
+                    this.getName(), 
+                    EnumAction.HEEL.getName());
+                
                 // 実行
                 this.doHeel();
             return 0;
@@ -110,5 +133,4 @@ public class Priest extends Player implements Heel, Palize, Poison {
 
         return super.selectAttack(attackId, player);
     }
-    
 }

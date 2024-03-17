@@ -1,4 +1,4 @@
-import com.name.battler.Progress;
+import com.name.battler.GameManager;
 
 /**
  * 課題実行クラス
@@ -6,9 +6,9 @@ import com.name.battler.Progress;
 public class App {
 
     public static void main(String[] args) throws Exception {
+
+        GameManager gm = new GameManager();
         
-        Progress progress = new Progress();
-        
-        progress.mainProgress();
+        gm.Start();
     }
 }
