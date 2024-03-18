@@ -7,14 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.name.battler.party.Party;
+import com.name.battler.player.Party;
 import com.name.battler.player.Player;
-import com.name.battler.player.enumplayer.EnumAction;
 import com.name.battler.player.enumplayer.EnumCondition;
-import com.name.battler.player.enumplayer.EnumJob;
 import com.name.battler.setting.JobManager;
-import com.name.battler.setting.PlayerJudge;
 import com.name.battler.setting.PlayerMaking;
+import com.name.battler.setting.battle.JobActionRule;
+import com.name.battler.setting.battle.PlayerJudge;
 import com.name.battler.statustext.Dialogue;
 import com.name.battler.statustext.EnumText;
 
@@ -26,8 +25,6 @@ public class GameManager {
     // 定数
     /** 作成するプレイヤー数 */
     final int NAME_COUNT = 6;
-    /** 技の数の最大値 */
-    final int ACTION_COUNT_MAX = 4;
     /** ランダムの定数 */
     final int RANDOM_HUNDRED = 100;
     final int PALIZE_RANDOM = 20;
@@ -55,7 +52,6 @@ public class GameManager {
     public void Start(){
         // 1. の最初のダイアログ
         Dialogue.showStartSettingText();
-
 
         /* --- 1. プレイヤーの作成 --- */
         // プレイヤーネームのためのリストを用意
@@ -88,7 +84,6 @@ public class GameManager {
         // ここでscanを閉じる
         scan.close();
 
-        // 1. の最後のダイアログ
         // 全パーティの表示(あとでダイアログに組み込む)
         System.out.println(playerList);
         Dialogue.showStartSettingLastText();
@@ -117,19 +112,19 @@ public class GameManager {
             Player movePlayer = order.remove(0);
 
             // 相手の選択
-                // 攻撃対象プレイヤーすべてをリストに書き出す
-                List<Player> attackPlayerList = new ArrayList<>();
-                for(int i=0; i<order.size(); i++){
-                    // 同じパーティではない
-                    if(movePlayer.getPartyNumber() != order.get(i).getPartyNumber()){
-                        // 死んでない
-                        if(!pj.isDead(order.get(i))){
-                            attackPlayerList.add(order.get(i));
-                        }
+            // 攻撃対象プレイヤーすべてをリストに書き出す
+            List<Player> targetPlayerList = new ArrayList<>();
+            for(int i=0; i<order.size(); i++){
+                // 同じパーティではない
+                if(movePlayer.getPartyNumber() != order.get(i).getPartyNumber()){
+                    // 死んでない
+                    if(!pj.isDead(order.get(i))){
+                        targetPlayerList.add(order.get(i));
                     }
                 }
-                // 攻撃対象リストからランダムで選択
-                Player attackPlayer = attackPlayerList.get(ran.nextInt(attackPlayerList.size()));
+            }
+            // 攻撃対象リストからランダムで選択
+            Player targetPlayer = targetPlayerList.get(ran.nextInt(targetPlayerList.size()));
 
             // 技行使とダメージ判定: 麻痺の場合20%の確率で動けない
             boolean isPalize = false;
@@ -139,39 +134,34 @@ public class GameManager {
             }
 
             if(!isPalize){
-                // 優先行動選択
-                int actionId = ran.nextInt(ACTION_COUNT_MAX);
-                // 魔法使いはMPがあるとき呪文優先
-                if(movePlayer.getJobId() == EnumJob.WIZARD.getId()){
-                    if(movePlayer.getMp() >= EnumAction.THUNDER.getCost()){
-                        // random 1-2
-                        actionId = ran.nextInt(2)+1;
-                    }
-                }
+                // 個人行動指針
+                JobActionRule jar = new JobActionRule();
+                int actionId = jar.selectJobAction(movePlayer);
 
-                // 僧侶はダメージがあると回復優先
-                if(movePlayer.getJobId() == EnumJob.PRIEST.getId()){
-                    if(movePlayer.getHp() <= -(EnumAction.HEEL.getDamageRange().getRandomValue())){
-                        // 僧侶の回復行動3
-                        actionId = 3;
-                    }
-                }
+                /**
+                 * パーティの行動指針を決める処理
+                 * ランダム行動
+                 * こうげきオンリー
+                 * かいふく優先
+                 * HP低いのを狙う
+                 * 
+                 */
 
 
                 // 技行動
-                int damage = movePlayer.selectAttack(actionId, attackPlayer);
-                attackPlayer.decreaseHp(damage);
+                int damage = movePlayer.selectAttack(actionId, targetPlayer);
+                targetPlayer.decreaseHp(damage);
             }
 
             // 死亡判定attackPlayer
-            if(pj.isDead(attackPlayer)){
+            if(pj.isDead(targetPlayer)){
                 // チームと行動順から除外
-                partyList.get(attackPlayer.getPartyNumber()).removePlayer(attackPlayer);
-                order.remove(attackPlayer);
+                partyList.get(targetPlayer.getPartyNumber()).removePlayer(targetPlayer);
+                order.remove(targetPlayer);
 
                 // テキスト
                 System.out.println();
-                System.out.printf(EnumText.DEAD_TEXT.getText(), attackPlayer.getName());
+                System.out.printf(EnumText.DEAD_TEXT.getText(), targetPlayer.getName());
                 System.out.println();
             }
 
@@ -197,7 +187,7 @@ public class GameManager {
             order.add(movePlayer);
 
             // パーティ全滅判定
-            if(partyList.get(attackPlayer.getPartyNumber()).getMembers().size() == 0){
+            if(partyList.get(targetPlayer.getPartyNumber()).getMembers().size() == 0){
                 break;
             }
         }
