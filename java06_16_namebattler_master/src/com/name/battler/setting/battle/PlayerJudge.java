@@ -1,4 +1,4 @@
-package com.name.battler.setting;
+package com.name.battler.setting.battle;
 
 import java.util.Random;
 

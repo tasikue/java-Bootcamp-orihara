@@ -84,22 +84,22 @@ public class Wizard extends Player implements Fire, Thunder {
 
         switch (attackId) {
             case ACTION_ONE:
-            System.out.format(EnumText.MAGIC_TEXT01.getText(), this.name, EnumAction.FIRE.getName());
+            System.out.format(EnumText.MAGIC_TEXT01.getText(), this.getLongName(), EnumAction.FIRE.getName());
             damage = doThunderAttack();
 
             // ダメージテキスト
             if(damage != 0){
-                System.out.format(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
+                System.out.format(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getLongName(), damage); 
             }
             return damage;
 
             case ACTION_TWO:
-            System.out.format(EnumText.MAGIC_TEXT01.getText(), this.name, EnumAction.FIRE.getName());
+            System.out.format(EnumText.MAGIC_TEXT01.getText(), this.getLongName(), EnumAction.FIRE.getName());
             damage = doFireAttack();
 
             // ダメージテキスト
             if(damage != 0){
-                System.out.format(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
+                System.out.format(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getLongName(), damage); 
             }
             return damage;
         }

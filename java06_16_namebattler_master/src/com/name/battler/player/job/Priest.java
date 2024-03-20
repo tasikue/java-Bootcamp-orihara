@@ -83,7 +83,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
             this.decreaseMp(cost);
             this.decreaseHp(EnumAction.HEEL.getDamageRange().getRandomValue());
 
-            System.out.printf(EnumText.HEEL_TEXT01.getText(), this.getName(), this.getHp());
+            System.out.printf(EnumText.HEEL_TEXT01.getText(), this.getLongName(), this.getHp());
         } else {
             // 使えなかった時のテキスト
             System.out.printf(EnumText.MAGIC_TEXT02.getText());
@@ -103,7 +103,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
             case ACTION_ONE:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(),
-                    this.getName(),
+                    this.getLongName(),
                     EnumAction.POISON.getName());
                 
                 // 実行
@@ -113,7 +113,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
             case ACTION_TWO:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(), 
-                    this.getName(), 
+                    this.getLongName(), 
                     EnumAction.PALIZE.getName());
                 
                 // 実行
@@ -123,7 +123,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
             case ACTION_THREE:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(), 
-                    this.getName(), 
+                    this.getLongName(), 
                     EnumAction.HEEL.getName());
                 
                 // 実行

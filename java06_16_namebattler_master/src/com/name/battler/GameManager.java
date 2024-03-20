@@ -12,8 +12,8 @@ import com.name.battler.player.Player;
 import com.name.battler.player.enumplayer.EnumCondition;
 import com.name.battler.setting.JobManager;
 import com.name.battler.setting.PlayerMaking;
-import com.name.battler.setting.battle.JobActionRule;
 import com.name.battler.setting.battle.PlayerJudge;
+import com.name.battler.setting.battle.strategy.*;
 import com.name.battler.statustext.Dialogue;
 import com.name.battler.statustext.EnumText;
 
@@ -28,14 +28,14 @@ public class GameManager {
     /** ランダムの定数 */
     final int RANDOM_HUNDRED = 100;
     final int PALIZE_RANDOM = 20;
-    /** パーティメンバー数 */
-    final int PARTY_MEMBER_COUNT = 3;
+    /** 作戦数 */
+    final int STRATEGY_COUNT = 5;
 
     // 変数
     /** 入力用 */
     private Scanner scan;
     /** ランダム用 */
-    private Random ran;
+    private Random random = new Random();
     /** 作成したプレイヤークラスを格納するリスト */
     private List<Player> playerList = new ArrayList<>();
     /** 作成したパーティクラスを格納するリスト */
@@ -59,7 +59,7 @@ public class GameManager {
 
         // 今回作成するパーティを用意
         int partyCount = 0;
-        partyList.add(new Party());
+        partyList.add(new Party(random.nextInt(STRATEGY_COUNT)));
         
         // プレイヤーの名前を入力させる
         for(int i=0; i<NAME_COUNT; i++){
@@ -71,9 +71,9 @@ public class GameManager {
             playerList.add(playerMaking.getPlayer());
 
             // 規定メンバー数を超えたら新しくパーティを作成
-            if(partyList.get(partyCount).getMembers().size() >= PARTY_MEMBER_COUNT){
+            if(partyList.get(partyCount).getMembers().size() >= Party.getMaxPartyCount()){
                 partyCount++;
-                partyList.add(new Party());
+                partyList.add(new Party(random.nextInt(STRATEGY_COUNT)));
             }
             // パーティに加入
             partyList.get(partyCount).appendPlayer(playerMaking.getPlayer(), partyCount);
@@ -84,9 +84,8 @@ public class GameManager {
         // ここでscanを閉じる
         scan.close();
 
-        // 全パーティの表示(あとでダイアログに組み込む)
-        System.out.println(playerList);
-        Dialogue.showStartSettingLastText();
+        // 全パーティの表示
+        Dialogue.showStartSettingLastText(partyList);
 
 
         /* --- 2. バトルフェイズ --- */
@@ -104,14 +103,17 @@ public class GameManager {
         Collections.sort(order, agiComparator);
 
         // 戦闘ループ 
-        while(true){
-            // 技をランダムで仕込む
-            ran = new Random();
+        boolean isBattleEnd = false;
+        while(!isBattleEnd){
+            // 行動するプレイヤー
+            Player movePlayer = null;
+            // 攻撃対象のプレイヤー
+            Player targetPlayer = null;
 
-            // 一番早く行動するプレイヤーを取り出す
-            Player movePlayer = order.remove(0);
 
-            // 相手の選択
+            // 行動プレイヤーの選択: 一番早く行動するプレイヤーを取り出す
+            movePlayer = order.remove(0);
+
             // 攻撃対象プレイヤーすべてをリストに書き出す
             List<Player> targetPlayerList = new ArrayList<>();
             for(int i=0; i<order.size(); i++){
@@ -123,51 +125,73 @@ public class GameManager {
                     }
                 }
             }
-            // 攻撃対象リストからランダムで選択
-            Player targetPlayer = targetPlayerList.get(ran.nextInt(targetPlayerList.size()));
 
             // 技行使とダメージ判定: 麻痺の場合20%の確率で動けない
             boolean isPalize = false;
             if(movePlayer.getCondition().equals(EnumCondition.PALIZE.getName())){
-                System.out.printf(EnumText.PALIZE_TEXT.getText(), movePlayer.getName(), EnumCondition.PALIZE.getName());
-                isPalize = ran.nextInt(RANDOM_HUNDRED) - PALIZE_RANDOM <= 0;
+                System.out.printf(EnumText.PALIZE_TEXT.getText(), movePlayer.getLongName(), EnumCondition.PALIZE.getName());
+                isPalize = random.nextInt(RANDOM_HUNDRED) - PALIZE_RANDOM <= 0;
             }
 
             if(!isPalize){
-                // 個人行動指針
-                JobActionRule jar = new JobActionRule();
-                int actionId = jar.selectJobAction(movePlayer);
+                // パーティの行動指針を決める処理
+                int actionId = 0;
 
-                /**
-                 * パーティの行動指針を決める処理
-                 * ランダム行動
-                 * こうげきオンリー
-                 * かいふく優先
-                 * HP低いのを狙う
-                 * 
-                 */
+                // 戦略の決定
+                switch (partyList.get(movePlayer.getPartyNumber()).getCurrendStrategy()) {
+                    case 0: // 作戦2: 攻撃しか選択しない
+                        Activity activity2 = new Activity(new AttackOnlyStrategy());
+                        targetPlayer = activity2.getTargetPlayer(targetPlayerList);
+                        actionId = activity2.getActionId(movePlayer);
+                    break;
 
+                    case 1: // 作戦3: HPが低いのを狙う
+                        Activity activity3 = new Activity(new AimWeakOpponentStrategy());
+                        targetPlayer = activity3.getTargetPlayer(targetPlayerList);
+                        actionId = activity3.getActionId(movePlayer);
+                    break;
+
+                    case 2: // 作戦4: とりあえず回復優先
+                        Activity activity4 = new Activity(new FirstMoveHeelStrategy());
+                        targetPlayer = activity4.getTargetPlayer(targetPlayerList);
+                        actionId = activity4.getActionId(movePlayer);
+                    break;
+
+                    case 3: // 作戦5: 僧侶は許さない
+                        Activity activity5 = new Activity(new AimPriestStrategy());
+                        targetPlayer = activity5.getTargetPlayer(targetPlayerList);
+                        actionId = activity5.getActionId(movePlayer);
+                    break;
+
+                    default:
+                    // 作戦1: 攻撃対象リストからランダムで選択
+                        Activity activity1 = new Activity(new RandomStrategy());
+                        targetPlayer = activity1.getTargetPlayer(targetPlayerList);
+                        actionId = activity1.getActionId(movePlayer);
+                    break;
+                }
+
+                // 追加要素: たまにはガードをする
+                // 効果: 状態異常回復 and mp回復 and ダメージ軽減
 
                 // 技行動
                 int damage = movePlayer.selectAttack(actionId, targetPlayer);
                 targetPlayer.decreaseHp(damage);
-            }
 
-            // 死亡判定attackPlayer
-            if(pj.isDead(targetPlayer)){
-                // チームと行動順から除外
-                partyList.get(targetPlayer.getPartyNumber()).removePlayer(targetPlayer);
-                order.remove(targetPlayer);
 
-                // テキスト
-                System.out.println();
-                System.out.printf(EnumText.DEAD_TEXT.getText(), targetPlayer.getName());
-                System.out.println();
+                // 死亡判定targetPlayer
+                if(pj.isDead(targetPlayer)){
+                    // チームと行動順から除外
+                    partyList.get(targetPlayer.getPartyNumber()).removePlayer(targetPlayer);
+                    order.remove(targetPlayer);
+                    // テキスト
+                    Dialogue.showDeadPlayerText(targetPlayer);
+                }
             }
 
             // 状態異常判定: 攻撃したほうが毒状態の時ダメージを受ける
             if(movePlayer.getCondition().equals(EnumCondition.POISON.getName())){
-                System.out.printf(EnumText.POISON_DAMAGE_TEXT.getText(), movePlayer.getName(), EnumCondition.POISON.getName());
+                System.out.printf(EnumText.POISON_DAMAGE_TEXT.getText(), movePlayer.getLongName(), EnumCondition.POISON.getName());
                 movePlayer.decreaseHp(EnumCondition.POISON.getDamage());
             }
 
@@ -176,24 +200,23 @@ public class GameManager {
                 // チームと行動順から除外
                 partyList.get(movePlayer.getPartyNumber()).removePlayer(movePlayer);
                 order.remove(movePlayer);
-
                 // テキスト
-                System.out.println();
-                System.out.printf(EnumText.DEAD_TEXT.getText(), movePlayer.getName());
-                System.out.println();
+                Dialogue.showDeadPlayerText(movePlayer);
             }
 
             // 今動いたプレイヤーを行動順の最後に追加する
             order.add(movePlayer);
 
             // パーティ全滅判定
-            if(partyList.get(targetPlayer.getPartyNumber()).getMembers().size() == 0){
-                break;
+            for(int i=0; i<partyList.size(); i++){
+                if(partyList.get(i).isPartyAnnihilation()){
+                    isBattleEnd = true;
+                }
             }
         }
 
         // 2. の最後のダイアログ
-        Dialogue.showStartSettingLastText();
+        // Dialogue.showStartSettingLastText();
 
 
         /* --- 3. 締め --- */

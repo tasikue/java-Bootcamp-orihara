@@ -1,5 +1,8 @@
 package com.name.battler.statustext;
 
+import java.util.List;
+
+import com.name.battler.player.Party;
 import com.name.battler.player.Player;
 
 /**
@@ -10,13 +13,23 @@ public class Dialogue {
     /** 始めのテキスト */
     public static void showStartSettingText(){
         message(EnumText.START_SETTING_TEXT_01.getText());
-        message(EnumText.START_SETTING_TEXT_02.getText());
-        messageln(EnumText.START_SETTING_TEXT_03.getText());
+        messageln(EnumText.START_SETTING_TEXT_02.getText());
     }
 
-    /** 始めの最後のテキスト */
-    public static void showStartSettingLastText(){
-        message(EnumText.START_SETTING_LAST_TEXT.getText());
+    /** 始めの最後のテキスト、全パーティの表示 */
+    public static void showStartSettingLastText(List<Party> partyList){
+        messageln("");
+        for(int i=0; i<partyList.size(); i++){
+            System.out.format(EnumText.START_SETTING_LAST_TEXT01.getText(), i + 1);
+            for(int j=0; j<Party.getMaxPartyCount(); j++){
+                Player tempPlayer = partyList.get(i).getMembers().get(j);
+
+                System.out.format("%s: ", tempPlayer.getName());
+                System.out.format("%s  ", tempPlayer.getJobName());
+            }
+            messageln("");
+        }
+        messageln("");
     }
 
     /** ステータス表示のテキスト */
@@ -32,6 +45,13 @@ public class Dialogue {
     public static void showStartBattleText(){
         message(EnumText.BATTLE_START_TEXT_01.getText());
         messageln(EnumText.BATTLE_START_TEXT_02.getText());
+    }
+
+    /** 死亡時のテキスト */
+    public static void showDeadPlayerText(Player player){
+        message("");
+        System.out.format(EnumText.DEAD_TEXT.getText(), player.getLongName());
+        messageln("");
     }
 
     /**

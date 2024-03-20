@@ -3,7 +3,7 @@ package com.name.battler.player;
 import com.name.battler.player.action.Attack;
 import com.name.battler.player.enumplayer.EnumCondition;
 import com.name.battler.setting.AbilityRange;
-import com.name.battler.setting.PlayerJudge;
+import com.name.battler.setting.battle.PlayerJudge;
 import com.name.battler.statustext.EnumText;
 
 /**
@@ -61,6 +61,14 @@ public abstract class Player implements Attack{
     /** --- 名前 --- */
     public String getName(){
         return this.name;
+    }
+
+    /** "パーティx の ●●××" */
+    public String getLongName(){
+        return String.format("パーティ%d の %s%s", 
+        this.partyNumber + 1, 
+        this.jobName,
+        this.name);
     }
 
     /** --- ジョブの名前 --- */
@@ -170,14 +178,14 @@ public abstract class Player implements Attack{
         switch(attackId){
             default:
             // 攻撃時のテキストとダメージテキスト
-            System.out.printf(EnumText.BATTLE_ATTACK_TEXT01.getText(), this.getName());
+            System.out.printf(EnumText.BATTLE_ATTACK_TEXT01.getText(), this.getLongName());
             damage = doNormalAttack(player);
 
             // 0ダメージの時テキストを替える
             if(damage == 0){
                 System.out.printf(EnumText.BATTLE_ATTACK_MISS_TEXT.getText()); 
             } else {
-                System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getName(), damage); 
+                System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getLongName(), damage); 
             }
             break;
         }

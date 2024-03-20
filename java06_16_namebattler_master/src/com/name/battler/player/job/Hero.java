@@ -44,7 +44,7 @@ public class Hero extends Player implements Heel{
             super.decreaseMp(cost);
             this.decreaseHp(EnumAction.HEEL.getDamageRange().getRandomValue());
 
-            System.out.printf(EnumText.HEEL_TEXT01.getText(), this.getName(), this.getHp());
+            System.out.printf(EnumText.HEEL_TEXT01.getText(), this.getLongName(), this.getHp());
         } else {
             // 使えなかった時のテキスト
             System.out.printf(EnumText.MAGIC_TEXT02.getText());
@@ -62,7 +62,7 @@ public class Hero extends Player implements Heel{
             case ACTION_ONE:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(), 
-                    this.getName(), 
+                    this.getLongName(), 
                     EnumAction.HEEL.getName());
                 
                 // 実行

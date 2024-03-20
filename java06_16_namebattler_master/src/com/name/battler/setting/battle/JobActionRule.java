@@ -11,7 +11,7 @@ import com.name.battler.player.enumplayer.EnumJob;
  */
 public class JobActionRule {
 
-    private Random random;
+    private Random ran = new Random();
 
     /** 技の数の最大値 */
     final int ACTION_COUNT_MAX = 4;
@@ -19,18 +19,19 @@ public class JobActionRule {
     /* --- メソッド --- */
     private int selectActionRandom(){
 
-        return random.nextInt(4);
+        return ran.nextInt(ACTION_COUNT_MAX);
     }
 
     public int selectJobAction(Player player){
 
-        // 魔法使いはMPがあるとき呪文優先
+        // 魔法使いはMPがあるとき呪文優先 
         if(player.getJobId() == EnumJob.WIZARD.getId()){
             if(player.getMp() >= EnumAction.THUNDER.getCost()){
                 // random 1-2
-                return random.nextInt(2)+1;
+                return ran.nextInt(2)+1;
             }
         }
+
 
         // 僧侶はダメージがあると回復優先
         if(player.getJobId() == EnumJob.PRIEST.getId()){
