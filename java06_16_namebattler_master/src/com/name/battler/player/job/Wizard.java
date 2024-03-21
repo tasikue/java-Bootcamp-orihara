@@ -14,8 +14,8 @@ public class Wizard extends Player implements Fire, Thunder {
 
     // 定数
     /** 行動パターン番号 */
-    private final int ACTION_ONE = 1;
-    private final int ACTION_TWO = 2;
+    private final int ATTACK_ONE = 1;
+    private final int ATTACK_TWO = 2;
 
     /**
      * コンストラクタ
@@ -83,7 +83,7 @@ public class Wizard extends Player implements Fire, Thunder {
         int damage;
 
         switch (attackId) {
-            case ACTION_ONE:
+            case ATTACK_ONE:
             System.out.format(EnumText.MAGIC_TEXT01.getText(), this.getLongName(), EnumAction.FIRE.getName());
             damage = doThunderAttack();
 
@@ -93,7 +93,7 @@ public class Wizard extends Player implements Fire, Thunder {
             }
             return damage;
 
-            case ACTION_TWO:
+            case ATTACK_TWO:
             System.out.format(EnumText.MAGIC_TEXT01.getText(), this.getLongName(), EnumAction.FIRE.getName());
             damage = doFireAttack();
 

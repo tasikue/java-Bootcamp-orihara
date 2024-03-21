@@ -28,8 +28,11 @@ public class GameManager {
     /** ランダムの定数 */
     final int RANDOM_HUNDRED = 100;
     final int PALIZE_RANDOM = 20;
+    final int TEN_PERCENT  = 10;
     /** 作戦数 */
     final int STRATEGY_COUNT = 5;
+    /** 休憩attackID */
+    final int REST_ATTACKID = -1;
 
     // 変数
     /** 入力用 */
@@ -135,47 +138,51 @@ public class GameManager {
 
             if(!isPalize){
                 // パーティの行動指針を決める処理
-                int actionId = 0;
+                int attackId = 0;
 
                 // 戦略の決定
                 switch (partyList.get(movePlayer.getPartyNumber()).getCurrendStrategy()) {
                     case 0: // 作戦2: 攻撃しか選択しない
                         Activity activity2 = new Activity(new AttackOnlyStrategy());
                         targetPlayer = activity2.getTargetPlayer(targetPlayerList);
-                        actionId = activity2.getActionId(movePlayer);
+                        attackId = activity2.getActionId(movePlayer);
                     break;
 
                     case 1: // 作戦3: HPが低いのを狙う
                         Activity activity3 = new Activity(new AimWeakOpponentStrategy());
                         targetPlayer = activity3.getTargetPlayer(targetPlayerList);
-                        actionId = activity3.getActionId(movePlayer);
+                        attackId = activity3.getActionId(movePlayer);
                     break;
 
                     case 2: // 作戦4: とりあえず回復優先
                         Activity activity4 = new Activity(new FirstMoveHeelStrategy());
                         targetPlayer = activity4.getTargetPlayer(targetPlayerList);
-                        actionId = activity4.getActionId(movePlayer);
+                        attackId = activity4.getActionId(movePlayer);
                     break;
 
                     case 3: // 作戦5: 僧侶は許さない
                         Activity activity5 = new Activity(new AimPriestStrategy());
                         targetPlayer = activity5.getTargetPlayer(targetPlayerList);
-                        actionId = activity5.getActionId(movePlayer);
+                        attackId = activity5.getActionId(movePlayer);
                     break;
 
                     default:
                     // 作戦1: 攻撃対象リストからランダムで選択
                         Activity activity1 = new Activity(new RandomStrategy());
                         targetPlayer = activity1.getTargetPlayer(targetPlayerList);
-                        actionId = activity1.getActionId(movePlayer);
+                        attackId = activity1.getActionId(movePlayer);
                     break;
                 }
 
-                // 追加要素: たまにはガードをする
-                // 効果: 状態異常回復 and mp回復 and ダメージ軽減
+                // 追加要素: たまにはやすむ 100/10
+                // 効果: 状態異常回復 and mp回復
+                if(random.nextInt(RANDOM_HUNDRED) - TEN_PERCENT <= 0){
+                    // -1は固定で休憩
+                    attackId = REST_ATTACKID;
+                }
 
                 // 技行動
-                int damage = movePlayer.selectAttack(actionId, targetPlayer);
+                int damage = movePlayer.selectAttack(attackId, targetPlayer);
                 targetPlayer.decreaseHp(damage);
 
 
@@ -215,12 +222,10 @@ public class GameManager {
             }
         }
 
-        // 2. の最後のダイアログ
-        // Dialogue.showStartSettingLastText();
-
-
         /* --- 3. 締め --- */
         // 勝者の決定
+        System.out.printf(EnumText.WINNER_TEAM_TEXT.getText(), order.get(0).getPartyNumber() + 1);
+
         // ステータス表示
         for(int i=0; i<order.size(); i++){
             Dialogue.showStatusText(order.get(i));

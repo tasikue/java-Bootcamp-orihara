@@ -15,7 +15,7 @@ public class Hero extends Player implements Heel{
 
     // 定数
     /** 行動パターン番号 */
-    private final int ACTION_ONE = 1;
+    private final int ATTACK_ONE = 1;
     
     /**
      * 職業の勇者を設定するコンストラクタ
@@ -59,7 +59,7 @@ public class Hero extends Player implements Heel{
     @Override
     public int selectAttack(int attackId, Player player){
         switch (attackId) {
-            case ACTION_ONE:
+            case ATTACK_ONE:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(), 
                     this.getLongName(), 

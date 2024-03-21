@@ -15,9 +15,9 @@ public class Priest extends Player implements Heel, Palize, Poison {
     
     // 定数
     /** 行動パターン番号 */
-    private final int ACTION_ONE = 1;
-    private final int ACTION_TWO = 2;
-    private final int ACTION_THREE = 3;
+    private final int ATTACK_ONE = 1;
+    private final int ATTACK_TWO = 2;
+    private final int ATTACK_THREE = 3;
 
     /**
      * 職業の僧侶を設定するコンストラクタ
@@ -100,7 +100,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
     @Override
     public int selectAttack(int attackId, Player player){
         switch (attackId) {
-            case ACTION_ONE:
+            case ATTACK_ONE:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(),
                     this.getLongName(),
@@ -110,7 +110,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
                 this.doPoisonState(player);
             return 0;
 
-            case ACTION_TWO:
+            case ATTACK_TWO:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(), 
                     this.getLongName(), 
@@ -120,7 +120,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
                 this.doPalizeState(player);
             return 0;
             
-            case ACTION_THREE:
+            case ATTACK_THREE:
                 System.out.printf(
                     EnumText.MAGIC_TEXT01.getText(), 
                     this.getLongName(), 

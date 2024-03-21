@@ -29,7 +29,9 @@ public enum EnumText {
     MAGIC_TEXT02("MPが足りない！\n"),
     PLAYER_STATUS_TEXT("ジョブID: %d, HP: %d, MP: %d, 攻撃力: %d, 防御力: %d, 幸運度: %d, すばやさ: %d \n"),
     POISON_DAMAGE_TEXT("%s は %s のダメージを受けている ...！ \n"),
-    PALIZE_TEXT("%s は %s で苦しんでいる ...！ \n");
+    PALIZE_TEXT("%s は %s で苦しんでいる ...！ \n"),
+    REST_TEXT("%s は 休んでいる …！\n"),
+    WINNER_TEAM_TEXT("パーティ%d の 勝利！\n\n");
 
     // 変数
     private String text;

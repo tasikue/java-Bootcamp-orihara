@@ -1,6 +1,8 @@
 package com.name.battler.player;
 
 import com.name.battler.player.action.Attack;
+import com.name.battler.player.action.Rest;
+import com.name.battler.player.enumplayer.EnumAction;
 import com.name.battler.player.enumplayer.EnumCondition;
 import com.name.battler.setting.AbilityRange;
 import com.name.battler.setting.battle.PlayerJudge;
@@ -9,7 +11,11 @@ import com.name.battler.statustext.EnumText;
 /**
  * プレイヤーの基底クラス
  */
-public abstract class Player implements Attack{
+public abstract class Player implements Attack, Rest{
+
+    // 定数
+    /** 防御アタックID */
+    final int ATTACK_DEFENCE = -1;
 
     // プレイヤーステータス
     /** ジョブID */
@@ -170,23 +176,40 @@ public abstract class Player implements Attack{
     }
 
     /**
+     * 防御行動: 状態異常回復とMP回復
+     */
+    @Override
+    public void doRest(){
+        // 状態異常回復
+        this.condition = EnumCondition.NORMAL.getName();
+        // MP回復
+        this.decreaseMp(EnumAction.REST.getCost());
+    }
+
+    /**
      * 技IDから技を選択する処理
      */
     public int selectAttack(int attackId, Player player){
         int damage = 0;
 
         switch(attackId){
-            default:
-            // 攻撃時のテキストとダメージテキスト
-            System.out.printf(EnumText.BATTLE_ATTACK_TEXT01.getText(), this.getLongName());
-            damage = doNormalAttack(player);
+            // 防御行動: 状態異常回復とMP回復とダメージ軽減
+            case ATTACK_DEFENCE:
+                System.out.printf(EnumText.REST_TEXT.getText(), this.getLongName());
+                this.doRest();
+            break;
 
-            // 0ダメージの時テキストを替える
-            if(damage == 0){
-                System.out.printf(EnumText.BATTLE_ATTACK_MISS_TEXT.getText()); 
-            } else {
-                System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getLongName(), damage); 
-            }
+            default:
+                // 攻撃時のテキストとダメージテキスト
+                System.out.printf(EnumText.BATTLE_ATTACK_TEXT01.getText(), this.getLongName());
+                damage = doNormalAttack(player);
+
+                // 0ダメージの時テキストを替える
+                if(damage == 0){
+                    System.out.printf(EnumText.BATTLE_ATTACK_MISS_TEXT.getText()); 
+                } else {
+                    System.out.printf(EnumText.BATTLE_ATTACK_TEXT02.getText(), player.getLongName(), damage); 
+                }
             break;
         }
 
