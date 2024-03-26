@@ -1,4 +1,5 @@
 import java.util.List;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -7,32 +8,37 @@ import java.util.Collections;
  * 課題2
  * TrumpManager
  */
-
 public class TrumpManager {
 
+    // 変数
+    /** トランプを格納するリスト */
     private List<Trump> trumps = new ArrayList<>();
-    private final int MARK_NUMBER_MAX = 4;
-    private final int CARD_NUMBER_MAX = 13;
+    /** 数値の最大個数 */
+    private final int CARD_COUNT_MAX = 13;
 
-    // トランプカードの生成
+    /** 
+     * トランプをリセットする(残り52枚にする)
+     */
     public void reset(){
-        for(int i=1; i<=MARK_NUMBER_MAX; i++){
-            for(int j=1; j<=CARD_NUMBER_MAX; j++){
+        for(int i=1; i<=Mark.values().length; i++){
+            for(int j=1; j<=CARD_COUNT_MAX; j++){
                 trumps.add(new Trump(i, j));
             }
         }
     }
 
-    // カードをシャッフルする
+    /**
+     * 残りのトランプをシャッフルする
+     */
     public void shuffle(){
         Collections.shuffle(trumps);
     }
 
-    // カードを一枚引く
+    /**
+     * 先頭のカードを一枚引く
+     * @return Tramp
+     */
     public Trump draw(){
-        Trump target = trumps.get(0);
-
-        trumps.remove(0);
-        return target;
+        return trumps.remove(0);
     }
 }
