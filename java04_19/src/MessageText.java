@@ -1,7 +1,9 @@
 /*
- * メッセージを扱うクラス
- * 
+ * ゲーム内メッセージを扱うクラス
  */
+
+import eatitem.EatItem;
+import eatitem.EatItemHistory;
 
 public class MessageText {
 

@@ -1,8 +1,10 @@
+package eatitem;
+
 import java.util.Random;
 
 /*
  * 食べ物のクラス
- * 
+ * javabootcamp既存のクラス
  */
 public class EatItem {
 

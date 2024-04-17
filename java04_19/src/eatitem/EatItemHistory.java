@@ -1,17 +1,28 @@
+package eatitem;
 
 /*
  * 食べたものを記録するクラス
- * 
  */
-
 public class EatItemHistory {
 
+    // 変数
+    /** 日数 */
     private int day;
+    /** プレイヤーHP */
     private int hp;
+    /** 食べ物クラス */
     private EatItem eatItem;
+    /** 食べたかどうか */
     private boolean doEat;
 
-    EatItemHistory(int day, int hp, EatItem eatItem, boolean doEat){
+    /**
+     * 食べ物を記録するためのコンストラクタ
+     * @param day 日数
+     * @param hp プレイヤーHP
+     * @param eatItem 食べ物
+     * @param doEat 食べたかどうか
+     */
+    public EatItemHistory(int day, int hp, EatItem eatItem, boolean doEat){
         this.day = day;
         this.hp = hp;
         this.eatItem = eatItem;
