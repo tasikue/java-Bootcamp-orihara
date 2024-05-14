@@ -1,27 +1,24 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import captureball.CaptureBall;
+import captureball.CaptureBallList;
+import monster.Monster;
+import monster.MonsterList;
+
 import java.util.List;
 import java.util.ArrayList;
+
 /**
  * ゲーム全体の
  * @author orihara
  * @version 1.0
  */
-public class App {
+public class GameFlow {
 
-    /**
-     * メインクラス
-     * @param args 使用しない
-     */
+    static Scanner scan;
 
-     static Scanner scan;
-
-    /**
-     * 
-     */
-    public static void main(String[] args) {
-    
-
+    public void Flow(){
         /** 繰り返す最大回数 */
         final int PHASE_COUNT_MAX = 10;
         /** 捕獲したモンスターのリスト */
@@ -111,7 +108,8 @@ public class App {
         MessageText.showCapturedMonsterList(capturedMonsterList);
     }
 
-    /**
+    
+/**
      * 入力を受けてそれが想定通りの数値か判定する処理
      * @param 選択肢の配列の長さ
      * @return 選んだインデックス
