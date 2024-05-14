@@ -4,7 +4,7 @@ import java.util.Scanner;
 import captureball.CaptureBall;
 import captureball.CaptureBallList;
 import monster.Monster;
-import monster.MonsterList;
+import monster.MonsterData;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -23,7 +23,6 @@ public class GameFlow {
         final int PHASE_COUNT_MAX = 10;
         /** 捕獲したモンスターのリスト */
         List<Monster> capturedMonsterList = new ArrayList<>();
-        MonsterList monsterList = new MonsterList();
         CaptureBallList captureBallList = new CaptureBallList();
         
         // 遊び方説明
@@ -37,7 +36,14 @@ public class GameFlow {
 
             /* バトルフェイズ */
             // 今回のモンスターを選択
-            Monster targetMonster = monsterList.getRandomMonster();
+            MonsterData tempMD = MonsterData.getRandomMonsterData();
+            Monster targetMonster = new Monster(
+                tempMD.getName(),
+                tempMD.getHpValue(),
+                tempMD.getPowerValue(),
+                tempMD.getDefenceValue(),
+                tempMD.getEncountRate(),
+                tempMD.getCaptureRate());
             MessageText.showBattlePhaseOneText(captureBallList, targetMonster);
         
             boolean isBattleEnd = false;

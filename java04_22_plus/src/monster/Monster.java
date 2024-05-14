@@ -9,7 +9,7 @@ import java.util.Random;
 public class Monster {
     
     /** 確立最大値 */
-    final int RANDOM_MAX = 101;
+    final int RANDOM_MAX = 100;
     private String name;
     private int hpValue;
     private int powerValue;
@@ -76,6 +76,6 @@ public class Monster {
     public boolean canCaputured(int correctValue) {
         Random ran = new Random();
 
-        return (this.captureRate + correctValue) - ran.nextInt(RANDOM_MAX) >= 0;
+        return (this.captureRate + correctValue) >= ran.nextInt(RANDOM_MAX);
     }
 }
