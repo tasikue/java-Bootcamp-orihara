@@ -1,7 +1,6 @@
 import java.util.List;
 
 import captureball.CaptureBall;
-import captureball.CaptureBallList;
 import monster.Monster;
 /**
  * メッセージテキストを管理するためのクラス
@@ -29,11 +28,11 @@ public class MessageText {
     }
 
     /** バトルフェイズ1 */
-    public static void showBattlePhaseOneText(CaptureBallList ballList, Monster monster){
+    public static void showBattlePhaseOneText(List<CaptureBall> balls, Monster monster){
         message("%s が現れた！", monster.getName());
         showStatusDisplay(monster);
         message("あなたは どうする？(数字を選択してください)");
-        showCommandSelectText(ballList, monster);
+        showCommandSelectText(balls, monster);
     }
 
     /** バトルフェイズ2 */
@@ -60,9 +59,9 @@ public class MessageText {
     }
 
     /** バトルフェイズ2: 捕獲失敗から次へ続く */
-    public static void showBattlePhaseTweFailureNextText(CaptureBallList ballList,Monster monster){
+    public static void showBattlePhaseTweFailureNextText(List<CaptureBall> balls,Monster monster){
         message("次は どうする ?(数字を選択してください)");
-        showCommandSelectText(ballList, monster);
+        showCommandSelectText(balls, monster);
     }
 
     /** バトルフェイズ: 逃げるテキスト */
@@ -145,10 +144,10 @@ public class MessageText {
      * @param ballList ボールが収納されているリスト
      * @param monster ターゲットにしているモンスター
      */
-    private static void showCommandSelectText(CaptureBallList ballList, Monster monster){
+    private static void showCommandSelectText(List<CaptureBall> balls, Monster monster){
         int index=0;
-        while(index < ballList.getListLength()){
-            showCommandDisplay(index+1, ballList.getCaptureBall(index), monster);
+        while(index < balls.size()){
+            showCommandDisplay(index+1, balls.get(index), monster);
             index++;
         }
         message("%d: モンスターを 見逃す", ++index);

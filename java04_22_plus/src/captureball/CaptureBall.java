@@ -16,7 +16,7 @@ public class CaptureBall {
      * @param correctValue 捕獲率の補正値
      * @param count 所持数
      */
-    CaptureBall(String name, int correctValue, int count) {
+    public CaptureBall(String name, int correctValue, int count) {
         this.name = name;
         this.correctValue = correctValue;
         this.count = count;

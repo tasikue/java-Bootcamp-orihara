@@ -21,4 +21,14 @@ public enum CaptureBallData {
         this.correctValue = correctValue;
         this.count = count;
     }
+
+    public String getName(){
+        return this.name;
+    }
+    public int getCorrectValue(){
+        return this.correctValue;
+    }
+    public int getCount(){
+        return this.count;
+    }
 }

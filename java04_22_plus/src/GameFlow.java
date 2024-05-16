@@ -2,7 +2,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import captureball.CaptureBall;
-import captureball.CaptureBallList;
+import captureball.CaptureBallData;
 import monster.Monster;
 import monster.MonsterData;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * ゲーム全体の
+ * ゲーム全体の進行クラス
  * @author orihara
  * @version 1.0
  */
@@ -19,12 +19,16 @@ public class GameFlow {
     static Scanner scan;
 
     public void Flow(){
-        /** 繰り返す最大回数 */
+        // 繰り返す最大回数
         final int PHASE_COUNT_MAX = 10;
-        /** 捕獲したモンスターのリスト */
+        // 捕獲したモンスターのリスト
         List<Monster> capturedMonsterList = new ArrayList<>();
-        CaptureBallList captureBallList = new CaptureBallList();
-        
+        // 使うボールリスト
+        List<CaptureBall> balls = new ArrayList<CaptureBall>();
+        for(CaptureBallData ball : CaptureBallData.values()){
+            balls.add(new CaptureBall(ball.getName(), ball.getCorrectValue(), ball.getCount()));
+        }
+
         // 遊び方説明
         MessageText.showPrologeText();
 
@@ -44,16 +48,16 @@ public class GameFlow {
                 tempMD.getDefenceValue(),
                 tempMD.getEncountRate(),
                 tempMD.getCaptureRate());
-            MessageText.showBattlePhaseOneText(captureBallList, targetMonster);
+            MessageText.showBattlePhaseOneText(balls, targetMonster);
         
             boolean isBattleEnd = false;
             boolean isAllBattleEnd;
             while (!isBattleEnd) {
                 // コマンド選択
-                int ballIndex = inputIndex(captureBallList.getListLength()) -1; // inputした数値をリストのインデックスに戻す
+                int ballIndex = inputIndex(balls.size()) -1; // inputした数値をリストのインデックスに戻す
 
                 // 逃げることを選択肢た場合
-                if(ballIndex == captureBallList.getListLength()){
+                if(ballIndex == balls.size()){
                     MessageText.showBattlePhaseRunAweyText();
                     isBattleEnd = true;
 
@@ -70,10 +74,16 @@ public class GameFlow {
                 }
 
                 // 捕獲開始
-                CaptureBall targetBall = captureBallList.getCaptureBall(ballIndex);
+                CaptureBall targetBall = balls.get(ballIndex);
                 MessageText.showBattlePhaseTweText(targetBall);
                 targetBall.use();
-                captureBallList.deleteCaptureBall();
+                // ボールの個数が0になった時リストから消去する
+                for(CaptureBall ball : balls){
+                    if(ball.getCount() == 0){
+                        balls.remove(ball);
+                        break;
+                    }
+                }
         
                 // 捕獲成功判定
                 if(targetMonster.canCaputured(targetBall.getCorrectValue())){
@@ -87,7 +97,7 @@ public class GameFlow {
                 }
 
                 // ボールがなくなった時の終了判定
-                boolean hasCaptureBall = captureBallList.isEmptyBallList();
+                boolean hasCaptureBall = balls.isEmpty();
                 if(hasCaptureBall){
                     MessageText.showBattleEndNothaveBallText();
                     break Start;
@@ -95,7 +105,7 @@ public class GameFlow {
 
                 // 捕獲失敗時に継続する
                 if(!isBattleEnd){
-                    MessageText.showBattlePhaseTweFailureNextText(captureBallList, targetMonster);
+                    MessageText.showBattlePhaseTweFailureNextText(balls, targetMonster);
                 }
             }
 
