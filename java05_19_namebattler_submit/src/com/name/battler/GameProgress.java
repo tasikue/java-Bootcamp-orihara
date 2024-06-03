@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.name.battler.player.Player;
-import com.name.battler.player.enumplayer.EnumAction;
-import com.name.battler.player.enumplayer.EnumCondition;
-import com.name.battler.player.enumplayer.EnumJob;
+import com.name.battler.player.action.Action;
+import com.name.battler.player.action.Condition;
+import com.name.battler.player.job.Job;
 import com.name.battler.setting.JobManager;
 import com.name.battler.setting.PlayerJudge;
 import com.name.battler.setting.PlayerMaking;
@@ -19,7 +19,7 @@ import com.name.battler.statustext.ConstantText;
 /**
  * ゲーム進行に関するクラス
  */
-public class Progress {
+public class GameProgress {
 
     // 定数
     /** 作成するプレイヤー数 */
@@ -49,7 +49,7 @@ public class Progress {
      * 2. 戦闘開始
      * 3. 終了
      */
-    public void mainProgress(){
+    public void progress(){
         // 1. の最初のダイアログ
         Dialogue.showStartSettingText();
 
@@ -94,8 +94,8 @@ public class Progress {
 
             // 技行使とダメージ判定: 麻痺の場合20%の確率で動けない
             boolean isPalize = false;
-            if(order.get(FIRST_INDEX).getCondition().equals(EnumCondition.PALIZE.getName())){
-                System.out.printf(ConstantText.PALIZE_TEXT.getText(), order.get(FIRST_INDEX).getName(), EnumCondition.PALIZE.getName());
+            if(order.get(FIRST_INDEX).getCondition().equals(Condition.PALIZE.getName())){
+                System.out.printf(ConstantText.PALIZE_TEXT.getText(), order.get(FIRST_INDEX).getName(), Condition.PALIZE.getName());
                 isPalize = ran.nextInt(RANDOM_HUNDRED) - PALIZE_RANDOM <= 0;
             }
 
@@ -103,16 +103,16 @@ public class Progress {
                 // 優先行動選択
                 int actionId = ran.nextInt(ACTION_COUNT_MAX);
                 // 魔法使いはMPがあるとき呪文優先
-                if(order.get(FIRST_INDEX).getJobId() == EnumJob.WIZARD.getId()){
-                    if(order.get(FIRST_INDEX).getMp() >= EnumAction.THUNDER.getCost()){
+                if(order.get(FIRST_INDEX).getJobId() == Job.WIZARD.getId()){
+                    if(order.get(FIRST_INDEX).getMp() >= Action.THUNDER.getCost()){
                         // random 1-2
                         actionId = ran.nextInt(2)+1;
                     }
                 }
 
                 // 僧侶はダメージがあると回復優先
-                if(order.get(FIRST_INDEX).getJobId() == EnumJob.PRIEST.getId()){
-                    if(order.get(FIRST_INDEX).getHp() <= -(EnumAction.HEEL.getDamageRange().getRandomValue())){
+                if(order.get(FIRST_INDEX).getJobId() == Job.PRIEST.getId()){
+                    if(order.get(FIRST_INDEX).getHp() <= -(Action.HEEL.getDamageRange().getRandomValue())){
                         // 僧侶の回復行動3
                         actionId = 3;
                     }
@@ -124,9 +124,9 @@ public class Progress {
             }
 
             // 状態異常判定: 攻撃したほうが毒状態の時ダメージを受ける
-            if(order.get(FIRST_INDEX).getCondition().equals(EnumCondition.POISON.getName())){
-                System.out.printf(ConstantText.POISON_DAMAGE_TEXT.getText(), order.get(FIRST_INDEX).getName(), EnumCondition.POISON.getName());
-                order.get(FIRST_INDEX).decreaseHp(EnumCondition.POISON.getDamage());
+            if(order.get(FIRST_INDEX).getCondition().equals(Condition.POISON.getName())){
+                System.out.printf(ConstantText.POISON_DAMAGE_TEXT.getText(), order.get(FIRST_INDEX).getName(), Condition.POISON.getName());
+                order.get(FIRST_INDEX).decreaseHp(Condition.POISON.getDamage());
             }
 
             // 死亡判定

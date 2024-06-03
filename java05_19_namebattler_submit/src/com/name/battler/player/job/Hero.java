@@ -1,10 +1,8 @@
 package com.name.battler.player.job;
 
 import com.name.battler.player.Player;
+import com.name.battler.player.action.Action;
 import com.name.battler.player.action.Heel;
-import com.name.battler.player.enumplayer.EnumAction;
-import com.name.battler.player.enumplayer.EnumJob;
-import com.name.battler.player.enumplayer.EnumJobParameter;
 import com.name.battler.setting.AbilityRange;
 import com.name.battler.statustext.ConstantText;
 
@@ -25,10 +23,10 @@ public class Hero extends Player implements Heel{
      * ジョブパラメータ -> 勇者のパラメータ
      */
     public Hero(){
-        super(EnumJob.HERO.getId());
+        super(Job.HERO.getId());
 
-        jobName = EnumJob.HERO.getName();
-        abilityRange = new AbilityRange(EnumJobParameter.HERO_PARAMETTER);
+        jobName = Job.HERO.getName();
+        abilityRange = new AbilityRange(JobParameter.HERO_PARAMETTER);
     }
 
     /**
@@ -36,13 +34,13 @@ public class Hero extends Player implements Heel{
      */
     @Override
     public void doHeel() {
-        int cost = EnumAction.HEEL.getCost();
+        int cost = Action.HEEL.getCost();
 
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
             super.decreaseMp(cost);
-            this.decreaseHp(EnumAction.HEEL.getDamageRange().getRandomValue());
+            this.decreaseHp(Action.HEEL.getDamageRange().getRandomValue());
 
             System.out.printf(ConstantText.HEEL_TEXT01.getText(), this.getName(), this.getHp());
         } else {
@@ -63,7 +61,7 @@ public class Hero extends Player implements Heel{
                 System.out.printf(
                     ConstantText.MAGIC_TEXT01.getText(), 
                     this.getName(), 
-                    EnumAction.HEEL.getName());
+                    Action.HEEL.getName());
                 
                 // 実行
                 this.doHeel();

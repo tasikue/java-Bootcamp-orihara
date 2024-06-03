@@ -1,7 +1,7 @@
 package com.name.battler.player;
 
 import com.name.battler.player.action.Attack;
-import com.name.battler.player.enumplayer.EnumCondition;
+import com.name.battler.player.action.Condition;
 import com.name.battler.setting.AbilityRange;
 import com.name.battler.setting.PlayerJudge;
 import com.name.battler.statustext.ConstantText;
@@ -42,7 +42,7 @@ public abstract class Player implements Attack{
     // コンストラクタ
     public Player(int jobId){
         this.jobId = jobId;
-        condition = EnumCondition.NORMAL.getName();
+        condition = Condition.NORMAL.getName();
     }
 
     /** --- --- 共通getter --- --- */
@@ -191,7 +191,7 @@ public abstract class Player implements Attack{
      * プレイヤーの状態異常を設定する処理
      * @param condition
      */
-    public void setCondition(EnumCondition condition){
+    public void setCondition(Condition condition){
         this.condition = pj.getCondition(condition);
     }
 }

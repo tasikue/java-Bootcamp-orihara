@@ -1,9 +1,9 @@
 package com.name.battler.player.job;
 
 import com.name.battler.player.Player;
+import com.name.battler.player.action.Action;
 import com.name.battler.player.action.Fire;
 import com.name.battler.player.action.Thunder;
-import com.name.battler.player.enumplayer.*;
 import com.name.battler.setting.AbilityRange;
 import com.name.battler.statustext.ConstantText;
 
@@ -25,10 +25,10 @@ public class Wizard extends Player implements Fire, Thunder {
      * ジョブパラメータ -> 魔法使いのパラメータ
      */
     public Wizard(){
-        super(EnumJob.WIZARD.getId());
+        super(Job.WIZARD.getId());
 
-        jobName = EnumJob.WIZARD.getName();
-        abilityRange = new AbilityRange(EnumJobParameter.WIZARD_PARAMETTER);
+        jobName = Job.WIZARD.getName();
+        abilityRange = new AbilityRange(JobParameter.WIZARD_PARAMETTER);
     }
 
     /**
@@ -37,14 +37,14 @@ public class Wizard extends Player implements Fire, Thunder {
      */
     @Override
     public int doThunderAttack() {
-        int cost = EnumAction.THUNDER.getCost();
+        int cost = Action.THUNDER.getCost();
 
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
             this.decreaseMp(cost);
             // ダメージ値をランダムで返す
-            return EnumAction.THUNDER.getDamageRange().getRandomValue();
+            return Action.THUNDER.getDamageRange().getRandomValue();
         }
 
         // 魔法が使えないテキスト
@@ -57,14 +57,14 @@ public class Wizard extends Player implements Fire, Thunder {
      */
     @Override
     public int doFireAttack() {
-        int cost = EnumAction.FIRE.getCost();
+        int cost = Action.FIRE.getCost();
 
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
             this.decreaseMp(cost);
             // ダメージ値をランダムで返す
-            return EnumAction.FIRE.getDamageRange().getRandomValue();
+            return Action.FIRE.getDamageRange().getRandomValue();
         }
 
         // 魔法が使えないテキスト
@@ -84,7 +84,7 @@ public class Wizard extends Player implements Fire, Thunder {
 
         switch (attackId) {
             case ACTION_ONE:
-            System.out.format(ConstantText.MAGIC_TEXT01.getText(), this.name, EnumAction.FIRE.getName());
+            System.out.format(ConstantText.MAGIC_TEXT01.getText(), this.name, Action.FIRE.getName());
             damage = doThunderAttack();
 
             // ダメージテキスト
@@ -94,7 +94,7 @@ public class Wizard extends Player implements Fire, Thunder {
             return damage;
 
             case ACTION_TWO:
-            System.out.format(ConstantText.MAGIC_TEXT01.getText(), this.name, EnumAction.FIRE.getName());
+            System.out.format(ConstantText.MAGIC_TEXT01.getText(), this.name, Action.FIRE.getName());
             damage = doFireAttack();
 
             // ダメージテキスト

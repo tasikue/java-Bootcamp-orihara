@@ -37,7 +37,7 @@ public class Dialogue {
      * テキストを出力する処理
      * @param text テキスト
      */
-    private void message(String text){
+    private static void message(String text){
         System.out.format(text + "\n");
     }
 
@@ -45,7 +45,7 @@ public class Dialogue {
      * テキストを出力する処理（改行）
      * @param text テキスト
      */
-    private void messageln(String text){
+    private static void messageln(String text){
         System.out.format(text + "\n\n");
     }
 }

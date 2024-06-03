@@ -1,10 +1,11 @@
 package com.name.battler.player.job;
 
 import com.name.battler.player.Player;
+import com.name.battler.player.action.Action;
+import com.name.battler.player.action.Condition;
 import com.name.battler.player.action.Heel;
 import com.name.battler.player.action.Palize;
 import com.name.battler.player.action.Poison;
-import com.name.battler.player.enumplayer.*;
 import com.name.battler.setting.AbilityRange;
 import com.name.battler.statustext.ConstantText;
 
@@ -27,10 +28,10 @@ public class Priest extends Player implements Heel, Palize, Poison {
      * ジョブパラメータ -> 僧侶のパラメータ
      */
     public Priest(){
-        super(EnumJob.PRIEST.getId());
+        super(Job.PRIEST.getId());
 
-        jobName = EnumJob.PRIEST.getName();
-        abilityRange = new AbilityRange(EnumJobParameter.PRIEST_PARAMETTER);
+        jobName = Job.PRIEST.getName();
+        abilityRange = new AbilityRange(JobParameter.PRIEST_PARAMETTER);
     }
 
     /* --- メソッド --- */
@@ -39,13 +40,13 @@ public class Priest extends Player implements Heel, Palize, Poison {
      */
     @Override
     public void doPoisonState(Player player) {
-        int cost = EnumAction.POISON.getCost();
+        int cost = Action.POISON.getCost();
 
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
             this.decreaseMp(cost);
-            player.setCondition(EnumCondition.POISON);
+            player.setCondition(Condition.POISON);
         } else {
             // 使えなかったときのテキスト
             System.out.printf(ConstantText.MAGIC_TEXT02.getText());
@@ -57,13 +58,13 @@ public class Priest extends Player implements Heel, Palize, Poison {
      */
     @Override
     public void doPalizeState(Player player) {
-        int cost = EnumAction.PALIZE.getCost();
+        int cost = Action.PALIZE.getCost();
 
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
             this.decreaseMp(cost);
-            player.setCondition(EnumCondition.PALIZE);
+            player.setCondition(Condition.PALIZE);
         } else {
             // 使えなかった時のテキスト
             System.out.printf(ConstantText.MAGIC_TEXT02.getText());
@@ -75,13 +76,13 @@ public class Priest extends Player implements Heel, Palize, Poison {
      */
     @Override
     public void doHeel() {
-        int cost = EnumAction.HEEL.getCost();
+        int cost = Action.HEEL.getCost();
 
         // 魔法が使えるかの判定
         if(super.pj.canUseMagic(this, cost)){
             // MPを消費
             this.decreaseMp(cost);
-            this.decreaseHp(EnumAction.HEEL.getDamageRange().getRandomValue());
+            this.decreaseHp(Action.HEEL.getDamageRange().getRandomValue());
 
             System.out.printf(ConstantText.HEEL_TEXT01.getText(), this.getName(), this.getHp());
         } else {
@@ -104,7 +105,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
                 System.out.printf(
                     ConstantText.MAGIC_TEXT01.getText(),
                     this.getName(),
-                    EnumAction.POISON.getName());
+                    Action.POISON.getName());
                 
                 // 実行
                 this.doPoisonState(player);
@@ -114,7 +115,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
                 System.out.printf(
                     ConstantText.MAGIC_TEXT01.getText(), 
                     this.getName(), 
-                    EnumAction.PALIZE.getName());
+                    Action.PALIZE.getName());
                 
                 // 実行
                 this.doPalizeState(player);
@@ -124,7 +125,7 @@ public class Priest extends Player implements Heel, Palize, Poison {
                 System.out.printf(
                     ConstantText.MAGIC_TEXT01.getText(), 
                     this.getName(), 
-                    EnumAction.HEEL.getName());
+                    Action.HEEL.getName());
                 
                 // 実行
                 this.doHeel();

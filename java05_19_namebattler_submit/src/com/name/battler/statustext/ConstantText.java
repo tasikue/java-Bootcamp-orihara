@@ -3,7 +3,7 @@ package com.name.battler.statustext;
 /**
  *  表示するテキストを定数で保持する列挙型
  */
-public enum EnumText {
+public enum ConstantText {
     
     // 列挙
     START_SETTING_TEXT_01("2体の魔物を生み出した ...!"),
@@ -38,7 +38,7 @@ public enum EnumText {
      * テキストを入力するコンストラクタ
      * @param text テキスト
      */
-    EnumText(String text){
+    ConstantText(String text){
         this.text = text;
     }
 
